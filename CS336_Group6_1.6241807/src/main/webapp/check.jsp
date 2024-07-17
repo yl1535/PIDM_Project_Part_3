@@ -73,6 +73,8 @@
 				
 			}
 			
+			// Do something here, identify which level of user access control the login user is, then change the ridirectURL to redirect to correspond page
+			
 			redirectURL = scs ? "success.jsp":"HelloWorld.jsp";
 			
 			out.print("<h1>");

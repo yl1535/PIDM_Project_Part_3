@@ -31,7 +31,7 @@ public class ApplicationDB {
 		}
 		try {
 			//Create a connection to your DB
-			connection = DriverManager.getConnection(connectionUrl,"root", "password");	//change this pwd to your own root pwd
+			connection = DriverManager.getConnection(connectionUrl,"root", "loobo613f");	//change this pwd to your own root pwd
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

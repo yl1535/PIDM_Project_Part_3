@@ -2,7 +2,7 @@
 
 # Current work separation plan:
 # Yue Luo -- Writing XML
-#         -- Writing DB SQL
-#         -- Help writing XML (Optional, but I strongly encourage, no contributor limit)
-# Harish  -- Complete checklist, README.md, record demo video
+# Kriti       -- Writing DB SQL
+# Xanne    -- Help writing XML (Optional, but I strongly encourage, no contributor limit)
+# Harish    -- Complete checklist, README.md, record demo video
 #         -- Improve ER Diagram (Optional, low contribution)

@@ -5,39 +5,65 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="UTF-8">
-		<title>Insert title here</title>
-		<style>
+    	<title>Customer Page</title>
+    	<style>
         	body, html {
-            	height: 100%;
             	margin: 0;
+            	padding: 0;
+            	height: 100%;
+            	display: flex;
+            	flex-direction: column;
+        	}
+
+        	.top-part {
+            	flex: 1;
             	display: flex;
             	justify-content: center;
             	align-items: center;
         	}
-        	.container {
+
+        	.bottom-part {
+            	flex: 4;
             	display: flex;
-            	flex-direction: column;
-            	justify-content: center;
-            	height: 100%;
+            	justify-content: space-around;
+            	align-items: center;
+        	}
+
+        	.rectangle {
+            	width: calc((100% / 3) - 20px);
+            	height: 80%;
+            	border: 2px solid black;
+            	position: relative;
+            	padding: 10px;
+        	}
+
+        	.title {
+            	position: absolute;
+            	top: 10px;
+            	left: 10px;
         	}
     	</style>
 	</head>
 	<body>
-		<%
-			String Username = (String) session.getAttribute("Username");
+    	<div class="top-part">
+        	<%
+        		String Username = (String) session.getAttribute("Username");
 			
-			out.print("<div>");
-			out.print("Welcome, " + Username);
-			out.print("</div>");
-		%>
-		<br>
-		<div>
-			<form action="HelloWorld.jsp">
-				<div>
-					<input type="submit" value="Logout"/>
-				</div>
-			</form>
-		</div>
+				out.print("<h1>");
+				out.print("Welcome, " + Username);
+				out.print("</h1>");
+			%>
+    	</div>
+    	<div class="bottom-part">
+        	<div class="rectangle">
+            	<h2 class="title">Check And Book</h2>
+        	</div>
+        	<div class="rectangle">
+            	<h2 class="title">History Reservation Check</h2>
+        	</div>
+        	<div class="rectangle">
+            	<h2 class="title">Question Box</h2>
+        	</div>
+    	</div>
 	</body>
 </html>

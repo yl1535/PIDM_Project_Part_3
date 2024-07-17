@@ -47,7 +47,7 @@
 			String mypwd  = request.getParameter("Password");
 			boolean scs;
 
-			String sql = "SELECT username FROM users WHERE username = ? AND pwd = ?";
+			String sql = "SELECT Usr, UsrType FROM Users WHERE Usr = ? AND Pwd = ?";
             pstm = con.prepareStatement(sql);
             pstm.setString(1, userid);
             pstm.setString(2, mypwd);
@@ -61,7 +61,11 @@
 				
 				scs = false;
 				
+				redirectURL = "HelloWorld.jsp";
+				
 			} else {
+				
+				rs.next();
 				
 				out.print("<h1>");
 				out.print("Login Success, welcome " + userid);
@@ -71,11 +75,13 @@
 				
 				session.setAttribute("Username", userid);
 				
+				String UsrType = rs.getString("UsrType");
+				
+				if(UsrType.equals("Passenger")) redirectURL = "Customer.jsp";
+				else if(UsrType.equals("Representative")) redirectURL = "Customer_Representative.jsp";
+				else redirectURL = "Admin.jsp";
+				
 			}
-			
-			// Do something here, identify which level of user access control the login user is, then change the ridirectURL to redirect to correspond page
-			
-			redirectURL = scs ? "success.jsp":"HelloWorld.jsp";
 			
 			out.print("<h1>");
 			out.print(". Redirecting...");

@@ -22,39 +22,16 @@ CREATE TABLE IF NOT EXISTS Passengers (
     FOREIGN KEY (Usr) REFERENCES Users(Usr)
 );
 
+CREATE TABLE IF NOT EXISTS QuestionBox (
+	Usr VARCHAR(30) NOT NULL,
+    QTitle VARCHAR(20) NOT NULL,
+    Question VARCHAR(200) NOT NULL,
+    QCode INTEGER PRIMARY KEY,
+    Reply VARCHAR(200),
+    ReplyUsr VARCHAR(30)
+);
+
 /* Above is fine, not garenteeing below */
-
-CREATE TABLE IF NOT EXISTS UsrPassengers (
-    Firstname VARCHAR(50) NOT NULL,
-    Lastname VARCHAR(50) NOT NULL,
-    Usr VARCHAR(30) PRIMARY KEY,
-    Pwd VARCHAR(30) NOT NULL,
-    Email VARCHAR(30) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS UsrEmployees (
-    Firstname VARCHAR(50) NOT NULL,
-    Lastname VARCHAR(50) NOT NULL,
-    Usr VARCHAR(30) PRIMARY KEY,
-    Pwd VARCHAR(30) NOT NULL,
-    SSN CHAR(9) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS UsrEmployCustomerRep (
-    Firstname VARCHAR(50) NOT NULL,
-    Lastname VARCHAR(50) NOT NULL,
-    Usr VARCHAR(30) PRIMARY KEY,
-    Pwd VARCHAR(30) NOT NULL,
-    SSN CHAR(9) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS UsrEmployAdmin (
-    Firstname VARCHAR(50) NOT NULL,
-    Lastname VARCHAR(50) NOT NULL,
-    Usr VARCHAR(30) PRIMARY KEY,
-    Pwd VARCHAR(30) NOT NULL,
-    SSN CHAR(9) NOT NULL
-);
 
 CREATE TABLE IF NOT EXISTS Train (
     TrainTid VARCHAR(50) PRIMARY KEY
@@ -122,11 +99,14 @@ VALUES ('CuTest', 'CuTest@rutgers.edu');
 INSERT INTO Users (Firstname, Lastname, Usr, Pwd, UsrType)
 VALUES ('Representative', 'Test', 'CRTest', 'CRPassword', 'Representative');
 INSERT INTO Employees (Usr, SSN)
-VALUES ('CuTest', '768312');
+VALUES ('CRTest', '768312');
 
 INSERT INTO Users (Firstname, Lastname, Usr, Pwd, UsrType)
 VALUES ('Admin', 'Test', 'AdTest', 'AdPassword', 'Admin');
 INSERT INTO Employees (Usr, SSN)
 VALUES ('AdTest', '511231');
 
+INSERT INTO QuestionBox (Usr, QTitle, Question, QCode, Reply, ReplyUsr)
+VALUES ('CuTest', 'TestQuestion', 'This is a Test Question Message', 0, null, null),
+('CuTest', 'AnsweredQuestion', 'This is a Test Answered Question', 1, 'This is Answer', 'CRTest');
 

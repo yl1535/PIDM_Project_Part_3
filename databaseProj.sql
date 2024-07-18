@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS Users (
     Lastname VARCHAR(50) NOT NULL,
     Usr VARCHAR(30) PRIMARY KEY,
     Pwd VARCHAR(30) NOT NULL,
-    UsrType VARCHAR(20)
+    UsrType ENUM('Passenger', 'Representative', 'Admin') NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Employees (

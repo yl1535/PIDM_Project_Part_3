@@ -1,43 +1,36 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="com.cs336.pkg.*"%>
-<%@ page import="java.io.*,java.util.*,java.sql.*"%>
-<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
+<%@ page import="java.sql.*, javax.sql.*, javax.naming.*" %>
+<%@ page import="java.io.*, java.util.*" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>Insert title here</title>
-		<style>
-        	body, html {
-            	height: 100%;
-            	margin: 0;
-            	display: flex;
-            	justify-content: center;
-            	align-items: center;
-        	}
-        	.container {
-            	display: flex;
-            	flex-direction: column;
-            	justify-content: center;
-            	height: 100%;
-        	}
-    	</style>
-	</head>
-	<body>
-		<%
-			String Username = (String) session.getAttribute("Username");
-			
-			out.print("<div>");
-			out.print("Welcome, " + Username);
-			out.print("</div>");
-		%>
-		<br>
-		<div>
-			<form action="HelloWorld.jsp">
-				<div>
-					<input type="submit" value="Logout"/>
-				</div>
-			</form>
-		</div>
-	</body>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Portal</title>
+</head>
+<body>
+    <h1>Welcome, Admin</h1>
+    <h2>Manage Customer Representatives</h2>
+    <form method="post" action="manageReps.jsp">
+        Username: <input type="text" name="username" required>
+        Action: 
+        <select name="action" required>
+            <option value="add">Add</option>
+            <option value="edit">Edit</option>
+            <option value="delete">Delete</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+    
+    <h2>Generate Reports</h2>
+    <form method="get" action="generateReport.jsp">
+        Report Type: 
+        <select name="reportType" required>
+            <option value="monthlyRevenue">Monthly Revenue</option>
+            <option value="reservationsByLine">Reservations by Line</option>
+            <option value="totalRevenueByCustomer">Total Revenue by Customer</option>
+            <option value="mostActiveLines">Most Active Lines</option>
+        </select>
+        <button type="submit">Generate</button>
+    </form>
+</body>
 </html>

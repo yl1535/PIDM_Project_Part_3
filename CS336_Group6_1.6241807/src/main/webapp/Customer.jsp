@@ -122,15 +122,7 @@
             	var modal = document.getElementById('modal');
             	modal.style.display = "none";
         	}
-
-        	function deleteBlock(blockId, QCode) {
-            	var block = document.getElementById(blockId);
-            	block.remove();
-            	var xhr = new XMLHttpRequest();
-            	xhr.open("POST", "RemoveQuestion.jsp", true);
-            	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            	xhr.send("QCode=" + QCode);
-        	}
+        	
         	function openCreateModal() {
                 var content = `
                     <form class="modal-form" onsubmit="createBlock(event)">
@@ -155,6 +147,45 @@
                     }
                 };
                 xhr.send("qTitle=" + qTitle + "&question=" + question);
+            }
+            
+            function openSearchModal() {
+                var content = `
+                    <form class="modal-form" onsubmit="searchQuestions(event)">
+                        <input type="text" id="searchKeyword" name="keyword" placeholder="Enter search keyword" required />
+                        <button type="submit" class="modal-form-button">Search</button>
+                    </form>`;
+                openModal(content);
+            }
+
+            function searchQuestions(event) {
+                event.preventDefault();
+                var keyword = document.getElementById('searchKeyword').value.toLowerCase();
+                var blocks = document.getElementsByClassName('block');
+                for (var i = 0; i < blocks.length; i++) {
+                    var title = blocks[i].getElementsByClassName('block-title')[0].innerText.toLowerCase();
+                    if (title.includes(keyword)) {
+                        blocks[i].style.display = 'flex';
+                    } else {
+                        blocks[i].style.display = 'none';
+                    }
+                }
+                closeModal();
+                document.getElementById('exitSearchButton').style.display = 'block';
+                document.getElementById('openCreateModalButton').style.display = 'none';
+                document.getElementById('searchButton').style.display = 'none';
+                document.getElementById('boxTitle').innerText = 'Search Results';
+            }
+
+            function exitSearchResults() {
+                var blocks = document.getElementsByClassName('block');
+                for (var i = 0; i < blocks.length; i++) {
+                    blocks[i].style.display = 'flex';
+                }
+                document.getElementById('exitSearchButton').style.display = 'none';
+                document.getElementById('openCreateModalButton').style.display = 'block';
+                document.getElementById('searchButton').style.display = 'block';
+                document.getElementById('boxTitle').innerText = 'Question Box';
             }
     	</script>
 	</head>
@@ -185,14 +216,15 @@
         	</div>
         	<div class="rectangle">
         		<div class="title-container">
-            		<div class="box-title">Question Box</div>
-            		<button onclick="openCreateModal()">Post A New Question</button>
+            		<div id="boxTitle" class="box-title">Question Box</div>
+            		<button id="searchButton" onclick="openSearchModal()">Search Questions</button>
+            		<button id="openCreateModalButton" onclick="openCreateModal()">Post A New Question</button>
+            		<button id="exitSearchButton" onclick="exitSearchResults()" style="display: none;">Exit Search Results</button>
             	</div>
             	<div class="scrollable-area">
             		<%
-            			String BlockRequest = "SELECT QTitle, Question, QCode, Reply, ReplyUsr FROM QuestionBox WHERE Usr = ?";
+            			String BlockRequest = "SELECT QTitle, Question, QCode, Reply, ReplyUsr FROM QuestionBox";
             			pstm = con.prepareStatement(BlockRequest);
-            			pstm.setString(1, Username);
             			rs = pstm.executeQuery();
             			int blockId = 0;
             			while (rs.next()) {
@@ -206,7 +238,6 @@
             		%>
             		<div class="block" id="block<%=blockId%>" style="background-color: <%=blockColor%>;" onclick="openModal('Question: <br> <%=Question%> <br> Reply: <br> <%= (Reply == null ? "No reply to this question yet" : Reply) %> <br> Replier: <br> <%= (ReplyUsr == null ? "Waiting for a replier" : ReplyUsr) %>')">
             			<span class="block-title"><%=QTitle%></span>
-            			<button class="button" onclick="event.stopPropagation(); deleteBlock('block<%=blockId%>', <%=QCode%>)">Delete</button>
             		</div>
             		<%
             			}

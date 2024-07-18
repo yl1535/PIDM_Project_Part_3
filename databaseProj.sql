@@ -108,5 +108,6 @@ VALUES ('AdTest', '511231');
 
 INSERT INTO QuestionBox (Usr, QTitle, Question, QCode, Reply, ReplyUsr)
 VALUES ('CuTest', 'TestQuestion', 'This is a Test Question Message', 0, null, null),
-('CuTest', 'AnsweredQuestion', 'This is a Test Answered Question', 1, 'This is Answer', 'CRTest');
+('CuTest', 'AnsweredQuestion', 'This is a Test Answered Question', 1, 'This is Answer', 'CRTest'),
+('AdTest', 'TestOnlyQuestion', 'This is a illegal Question', 2, 'This is Not Answer', 'AdTest');
 

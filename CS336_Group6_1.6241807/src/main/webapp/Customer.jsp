@@ -206,6 +206,9 @@
 				out.print("Welcome Back, " + Username);
 				out.print("</h1>");
 			%>
+			<form action="HelloWorld.jsp">
+				<input type="submit" value="logout"/>
+			</form>
     	</div>
     	<div class="bottom-part">
         	<div class="rectangle">

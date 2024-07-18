@@ -9,6 +9,9 @@
 </head>
 <body>
     <h1>Welcome, Customer Representative!</h1>
+    <form action="HelloWorld.jsp">
+		<input type="submit" value="logout"/>
+	</form>
     <h2>Edit Train Schedules</h2>
     <form method="post" action="editSchedule.jsp">
         Train ID: <input type="text" name="trainId" required>

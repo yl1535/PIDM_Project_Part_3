@@ -9,6 +9,9 @@
 </head>
 <body>
     <h1>Welcome, Admin</h1>
+    <form action="HelloWorld.jsp">
+		<input type="submit" value="logout"/>
+	</form>
     <h2>Manage Customer Representatives</h2>
     <form method="post" action="manageReps.jsp">
         Username: <input type="text" name="username" required>

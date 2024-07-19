@@ -91,6 +91,17 @@ CREATE TABLE IF NOT EXISTS Pass (
     FOREIGN KEY (Sid) REFERENCES Station(Sid)
 );
 
+CREATE TABLE IF NOT EXISTS SearchResults (	/* This is a temporary storage use table, do not need to include in ER diagram */
+	ScheduleTid VARCHAR(50) PRIMARY KEY,
+    TrainTid VARCHAR(50) NOT NULL,
+    Linename VARCHAR(50) NOT NULL, 
+    OSid VARCHAR(50) NOT NULL,
+    DSid VARCHAR(50) NOT NULL,
+    Otime DATETIME NOT NULL,
+    Dtime DATETIME NOT NULL,
+    Fare INT NOT NULL
+);
+
 INSERT INTO Users (Firstname, Lastname, Usr, Pwd, UsrType)
 VALUES ('Customer', 'Test', 'CuTest', 'CuPassword', 'Passenger');
 INSERT INTO Passengers (Usr, Email)
@@ -114,14 +125,19 @@ VALUES ('CuTest', 'TestQuestion', 'This is a Test Question Message', 0, null, nu
 INSERT INTO Train (TrainTid) VALUES ('T001');
 INSERT INTO Train (TrainTid) VALUES ('T002');
 
-INSERT INTO TrainSchedule (TrainTid, ScheduleTid, Linename, TotalFare) VALUES ('T001', 'S001', 'Blue Line', 100);
+INSERT INTO TrainSchedule (TrainTid, ScheduleTid, Linename, TotalFare) VALUES ('T001', 'S001', 'Blue Line', 140);
 INSERT INTO TrainSchedule (TrainTid, ScheduleTid, Linename, TotalFare) VALUES ('T002', 'S002', 'Green Line', 120);
+INSERT INTO TrainSchedule (TrainTid, ScheduleTid, Linename, TotalFare) VALUES ('T001', 'S003', 'Red Line', 100);
 
 INSERT INTO Station (Sid, Stationname, city, state) VALUES ('ST001', 'Central Station', 'New York', 'NY');
 INSERT INTO Station (Sid, Stationname, city, state) VALUES ('ST002', 'West Station', 'Chicago', 'IL');
 
 INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S001', 'ST001', null, '2024-07-16 10:00:00');
 INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S001', 'ST002', '2024-07-16 09:00:00', null);
+INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T002', 'S002', 'ST002', null, '2024-07-16 11:00:00');
+INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T002', 'S002', 'ST001', '2024-07-16 10:00:00', null);
+INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S003', 'ST001', null, '2024-07-16 19:00:00');
+INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S003', 'ST002', '2024-07-16 18:00:00', null);
 
 
 

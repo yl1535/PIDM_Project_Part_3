@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS Train (
     TrainTid VARCHAR(50) PRIMARY KEY
 );
 
-CREATE TABLE IF NOT EXISTS Schedule (
+CREATE TABLE IF NOT EXISTS TrainSchedule (
     TrainTid VARCHAR(50) NOT NULL,
     ScheduleTid VARCHAR(50) NOT NULL,
     Linename VARCHAR(50) NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS Schedule (
 
 CREATE TABLE IF NOT EXISTS Station (
     Sid VARCHAR(50) PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
+    Stationname VARCHAR(50) NOT NULL,
     city VARCHAR(50) NOT NULL,
     state VARCHAR(50) NOT NULL
 );
@@ -60,13 +60,13 @@ CREATE TABLE IF NOT EXISTS Stops (
     Deptime DATETIME NOT NULL,
     Arrtime DATETIME NOT NULL,
     PRIMARY KEY (TrainTid, ScheduleTid, Sid),
-    FOREIGN KEY (TrainTid, ScheduleTid) REFERENCES Schedule(TrainTid, ScheduleTid),
+    FOREIGN KEY (TrainTid, ScheduleTid) REFERENCES TrainSchedule(TrainTid, ScheduleTid),
     FOREIGN KEY (Sid) REFERENCES Station(Sid)
 );
 
 CREATE TABLE IF NOT EXISTS Reservations (
     RN INT NOT NULL,
-    Date DATE NOT NULL,
+    ReservateDate DATE NOT NULL,
     IfChild BOOLEAN NOT NULL,
     IfSenior BOOLEAN NOT NULL,
     IfDisabled BOOLEAN NOT NULL,
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS Reservations (
     ScheduleTid VARCHAR(50) NOT NULL,
     PRIMARY KEY (Usr, RN, TrainTid, ScheduleTid),
     FOREIGN KEY (Usr) REFERENCES Passengers(Usr),
-    FOREIGN KEY (TrainTid, ScheduleTid) REFERENCES Schedule(TrainTid, ScheduleTid)
+    FOREIGN KEY (TrainTid, ScheduleTid) REFERENCES TrainSchedule(TrainTid, ScheduleTid)
 );
 
 CREATE TABLE IF NOT EXISTS Pass (

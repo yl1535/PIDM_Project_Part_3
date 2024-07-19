@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="com.cs336.pkg.*"%>
-<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="java.io.*,java.util.*,java.sql.*,java.time.LocalDateTime"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <%
     ApplicationDB db = new ApplicationDB();
@@ -25,8 +25,9 @@
             String DSid = rs.getString("DSid");
             Timestamp Dtime = rs.getTimestamp("Dtime");
             int Fare = rs.getInt("Fare");
+            boolean isPast = LocalDateTime.now().isAfter(Otime.toLocalDateTime());
 %>
-        <div class="book" id="book<%=ScheduleTid%>" onclick="">
+        <div class="book" id="book<%=ScheduleTid%>" onclick="fetchScheduleDetails('<%=ScheduleTid%>')" style="<%= isPast ? "display: none;" : "" %>">
             <span class="book-title"><%=ScheduleTid%> <%=TrainTid%> <%=Linename%> <%=OSid%> <%=Otime%> <%=DSid%> <%=Dtime%> Fare: <%=Fare%></span>
         </div>
 <%

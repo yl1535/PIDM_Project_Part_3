@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="com.cs336.pkg.*"%>
-<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="java.io.*,java.util.*,java.sql.*, java.time.LocalDateTime"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <%
     String origin = request.getParameter("origin");
@@ -14,13 +14,9 @@
 
     try {
         con = db.getConnection();
-
-        // Clear previous search results
         String clearSQL = "DELETE FROM SearchResults";
         pstm = con.prepareStatement(clearSQL);
         pstm.executeUpdate();
-
-        // Insert new search results
         String searchSQL = "INSERT INTO SearchResults (ScheduleTid, TrainTid, Linename, OSid, DSid, Otime, Dtime, Fare) " +
                            "SELECT ts.ScheduleTid, ts.TrainTid, ts.Linename, st1.Stationname AS OSid, st2.Stationname AS DSid, s1.Deptime AS Otime, s2.Arrtime AS Dtime, ts.TotalFare " +
                            "FROM TrainSchedule ts " +
@@ -34,8 +30,6 @@
         pstm.setString(2, destination);
         pstm.setString(3, travelDate);
         pstm.executeUpdate();
-
-        // Retrieve and display search results
         String displaySQL = "SELECT * FROM SearchResults";
         pstm = con.prepareStatement(displaySQL);
         rs = pstm.executeQuery();
@@ -49,8 +43,9 @@
             String DSid = rs.getString("DSid");
             Timestamp Dtime = rs.getTimestamp("Dtime");
             int Fare = rs.getInt("Fare");
+            boolean isPast = LocalDateTime.now().isAfter(Otime.toLocalDateTime());
 %>
-        <div class="book" id="book<%=ScheduleTid%>" onclick="">
+        <div class="book" id="book<%=ScheduleTid%>" onclick="fetchScheduleDetails('<%=ScheduleTid%>')" style="<%= isPast ? "display: none;" : "" %>">
             <span class="book-title"><%=ScheduleTid%> <%=TrainTid%> <%=Linename%> <%=OSid%> <%=Otime%> <%=DSid%> <%=Dtime%> Fare: <%=Fare%></span>
         </div>
 <%

@@ -31,8 +31,6 @@ CREATE TABLE IF NOT EXISTS QuestionBox (
     ReplyUsr VARCHAR(30)
 );
 
-/* Above is fine, not garenteeing below */
-
 CREATE TABLE IF NOT EXISTS Train (
     TrainTid VARCHAR(50) PRIMARY KEY
 );
@@ -128,16 +126,20 @@ INSERT INTO Train (TrainTid) VALUES ('T002');
 INSERT INTO TrainSchedule (TrainTid, ScheduleTid, Linename, TotalFare) VALUES ('T001', 'S001', 'Blue Line', 140);
 INSERT INTO TrainSchedule (TrainTid, ScheduleTid, Linename, TotalFare) VALUES ('T002', 'S002', 'Green Line', 120);
 INSERT INTO TrainSchedule (TrainTid, ScheduleTid, Linename, TotalFare) VALUES ('T001', 'S003', 'Red Line', 100);
+INSERT INTO TrainSchedule (TrainTid, ScheduleTid, Linename, TotalFare) VALUES ('T001', 'S004', 'Dead Line', 100);
 
 INSERT INTO Station (Sid, Stationname, city, state) VALUES ('ST001', 'Central Station', 'New York', 'NY');
 INSERT INTO Station (Sid, Stationname, city, state) VALUES ('ST002', 'West Station', 'Chicago', 'IL');
 
-INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S001', 'ST001', null, '2024-07-16 10:00:00');
-INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S001', 'ST002', '2024-07-16 09:00:00', null);
+INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S001', 'ST001', null, '2025-07-16 10:00:00');
+INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S001', 'ST002', '2025-07-16 09:00:00', null);
 INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T002', 'S002', 'ST002', null, '2025-07-16 11:00:00');
 INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T002', 'S002', 'ST001', '2025-07-16 10:00:00', null);
-INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S003', 'ST001', null, '2024-07-16 19:00:00');
-INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S003', 'ST002', '2024-07-16 18:00:00', null);
+INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S003', 'ST001', null, '2025-07-16 19:00:00');
+INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S003', 'ST002', '2025-07-16 18:00:00', null);
+INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S004', 'ST001', null, '2023-07-16 10:00:00');
+INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S004', 'ST002', '2023-07-16 09:00:00', null);
 
-
+INSERT INTO Reservations (RN, ReservateDate, IfChild, IfSenior, IfDisabled, IfRound, Usr, TrainTid, ScheduleTid)
+VALUES (1, '2022-07-16', false, false, false, false, 'CuTest', 'T001', 'S004');
 

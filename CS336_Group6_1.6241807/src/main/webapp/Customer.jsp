@@ -358,12 +358,58 @@
     	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     	        xhr.onreadystatechange = function() {
     	            if (xhr.readyState === 4 && xhr.status === 200) {
-    	                alert('Reservation successful!');
     	                closeModal();
+    	                updateReservationsList();
     	            }
     	        };
     	        const params = `ifRound=${ifRound}&ifChild=${ifChild}&ifDisabled=${ifDisabled}&ifSenior=${ifSenior}`;
     	        xhr.send(params);
+    	    }
+
+    	    function updateReservationsList() {
+    	        const xhr = new XMLHttpRequest();
+    	        xhr.open("POST", "FetchReservationsList.jsp", true);
+    	        xhr.onreadystatechange = function() {
+    	            if (xhr.readyState === 4 && xhr.status === 200) {
+    	                document.getElementById('reservationsList').innerHTML = xhr.responseText;
+    	            }
+    	        };
+    	        xhr.send();
+    	    }
+    	    
+    	    function fetchReservationDetails(rn) {
+    	        var xhr = new XMLHttpRequest();
+    	        xhr.open("POST", "FetchReservationDetails.jsp", true);
+    	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    	        xhr.onreadystatechange = function() {
+    	            if (xhr.readyState === 4 && xhr.status === 200) {
+    	                openModal(xhr.responseText);
+    	            }
+    	        };
+    	        xhr.send("rn=" + rn);
+    	    }
+
+    	    function openCancelReservationModal(rn) {
+    	        const content = `
+    	            <p>Do you want to cancel this reservation?</p>
+    	            <button onclick="cancelReservation(${rn})">Yes</button>
+    	            <button onclick="closeModal()">No</button>
+    	        `;
+    	        openModal(content);
+    	    }
+
+    	    function cancelReservation(rn) {
+    	        var xhr = new XMLHttpRequest();
+    	        xhr.open("POST", "CancelReservation.jsp", true);
+    	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    	        xhr.onreadystatechange = function() {
+    	            if (xhr.readyState === 4 && xhr.status === 200) {
+    	                alert('Reservation cancelled successfully!');
+    	                closeModal();
+    	                location.reload();
+    	            }
+    	        };
+    	        xhr.send("rn=" + rn);
     	    }
 
 		</script>
@@ -433,11 +479,12 @@
                 				}
             				}
             				bookId++;
+            				boolean isPast = LocalDateTime.now().isAfter(StartTime.toLocalDateTime());
     				%>
-    				<div class="book" id="book<%=bookId%>" onclick="fetchScheduleDetails('<%=ScheduleTid%>')">
+    				<div class="book" id="book<%=bookId%>" onclick="fetchScheduleDetails('<%=ScheduleTid%>')" style="<%= isPast ? "display: none;" : "" %>">
         				<span class="book-title"><%=ScheduleTid%> <%=TrainTid%> <%=Linename%> <%=Origin%> <%=StartTime%> <%=Destination%> <%=EndTime%> Fare: <%=TotalFare%></span>
     				</div>
-    				<% 
+    				<%
         				} 
     				%>
 				</div>
@@ -446,11 +493,8 @@
             	<div class="title-container">
             		<div>History Reservation Check</div>
             	</div>
-            	<div class="scrollable-area">
+            	<div class="scrollable-area" id="reservationsList">
             		<%
-            			if (request.getParameter("action") != null && request.getParameter("action").equals("makeReservation")) {
-                        	response.sendRedirect(request.getRequestURI());
-                    	}
             			String ResRequest = "SELECT R.RN, R.ScheduleTid, S.Deptime " +
                             				"FROM Reservations R " +
                             				"JOIN Stops S ON R.TrainTid = S.TrainTid AND R.ScheduleTid = S.ScheduleTid " +
@@ -461,12 +505,12 @@
         				int ResId = 0;
         				while (rs.next()) {
             				int RN = rs.getInt("RN");
-            				java.sql.Timestamp departureTime = rs.getTimestamp("Deptime"); // Assuming Deptime is a TIMESTAMP
+            				Timestamp departureTime = rs.getTimestamp("Deptime");
             				ResId++;
             				boolean IfNotHistory = LocalDateTime.now().isBefore(departureTime.toLocalDateTime());
-            				String blockColor = (IfNotHistory) ? "lightgreen" : "lightyellow";
+            				String ResColor = (IfNotHistory) ? "lightgreen" : "lightyellow";
     				%>
-    				<div class="Res" id="Res<%=ResId%>" style="background-color: <%=blockColor%>;" onclick="">
+    				<div class="Res" id="Res<%=ResId%>" style="background-color: <%=ResColor%>;" onclick="fetchReservationDetails(<%=RN%>)">
         				<span class="Res-title">Reservation No <%=RN%></span>
     				</div>
     				<%

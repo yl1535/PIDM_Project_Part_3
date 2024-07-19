@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="com.cs336.pkg.*"%>
-<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="java.io.*,java.util.*,java.sql.*,java.time.LocalDateTime"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <!DOCTYPE html>
 <html>
@@ -74,6 +74,16 @@
             	padding: 10px;
         	}
         	
+        	.Res {
+            	height: calc(100% / 6);
+            	border: 1px solid black;
+            	margin-bottom: 10px;
+            	display: flex;
+            	justify-content: space-between;
+            	align-items: center;
+            	padding: 10px;
+        	}
+        	
         	.block-title {
         		flex: 1;
         	}
@@ -125,6 +135,7 @@
 
     	</style>
     	<script>
+    	
     		function openModal(content) {
             	var modal = document.getElementById('modal');
             	var modalContent = document.getElementById('modal-content');
@@ -310,6 +321,50 @@
     	        };
     	        xhr.send();
     	    }
+    	    
+    	    function openReservationModal() {
+
+    	        const content = `
+    	            <form class="modal-form" onsubmit="makeReservation(event)">
+    	                <label for="tripType">Trip Type:</label>
+    	                <select id="tripType" name="tripType" required>
+    	                    <option value="oneway">One-way</option>
+    	                    <option value="roundtrip">Round-trip</option>
+    	                </select>
+    	                <label for="passengerType">Passenger Type:</label>
+    	                <select id="passengerType" name="passengerType" required>
+    	                    <option value="normal">Normal</option>
+    	                    <option value="child">Child</option>
+    	                    <option value="disabled">Disabled</option>
+    	                    <option value="senior">Senior</option>
+    	                </select>
+    	                <button type="submit" class="modal-form-button">Confirm Reservation</button>
+    	            </form>`;
+    	        openModal(content);
+    	    }
+
+    	    function makeReservation(event) {
+    	        event.preventDefault();
+    	        const tripType = document.getElementById('tripType').value;
+    	        const passengerType = document.getElementById('passengerType').value;
+
+    	        const ifRound = tripType === "roundtrip";
+    	        const ifChild = passengerType === "child";
+    	        const ifDisabled = passengerType === "disabled";
+    	        const ifSenior = passengerType === "senior";
+
+    	        const xhr = new XMLHttpRequest();
+    	        xhr.open("POST", "MakeReservation.jsp", true);
+    	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    	        xhr.onreadystatechange = function() {
+    	            if (xhr.readyState === 4 && xhr.status === 200) {
+    	                alert('Reservation successful!');
+    	                closeModal();
+    	            }
+    	        };
+    	        const params = `ifRound=${ifRound}&ifChild=${ifChild}&ifDisabled=${ifDisabled}&ifSenior=${ifSenior}`;
+    	        xhr.send(params);
+    	    }
 
 		</script>
 	</head>
@@ -388,7 +443,36 @@
 				</div>
 			</div>
         	<div class="rectangle">
-            	<div class="title">History Reservation Check</div>
+            	<div class="title-container">
+            		<div>History Reservation Check</div>
+            	</div>
+            	<div class="scrollable-area">
+            		<%
+            			if (request.getParameter("action") != null && request.getParameter("action").equals("makeReservation")) {
+                        	response.sendRedirect(request.getRequestURI());
+                    	}
+            			String ResRequest = "SELECT R.RN, R.ScheduleTid, S.Deptime " +
+                            				"FROM Reservations R " +
+                            				"JOIN Stops S ON R.TrainTid = S.TrainTid AND R.ScheduleTid = S.ScheduleTid " +
+                            				"WHERE R.Usr = ? AND S.Arrtime IS NULL";
+        				pstm = con.prepareStatement(ResRequest);
+        				pstm.setString(1, Username);
+        				rs = pstm.executeQuery();
+        				int ResId = 0;
+        				while (rs.next()) {
+            				int RN = rs.getInt("RN");
+            				java.sql.Timestamp departureTime = rs.getTimestamp("Deptime"); // Assuming Deptime is a TIMESTAMP
+            				ResId++;
+            				boolean IfNotHistory = LocalDateTime.now().isBefore(departureTime.toLocalDateTime());
+            				String blockColor = (IfNotHistory) ? "lightgreen" : "lightyellow";
+    				%>
+    				<div class="Res" id="Res<%=ResId%>" style="background-color: <%=blockColor%>;" onclick="">
+        				<span class="Res-title">Reservation No <%=RN%></span>
+    				</div>
+    				<%
+        				}
+    				%>
+            	</div>
         	</div>
         	<div class="rectangle">
         		<div class="title-container">

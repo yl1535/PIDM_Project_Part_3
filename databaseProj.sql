@@ -134,8 +134,8 @@ INSERT INTO Station (Sid, Stationname, city, state) VALUES ('ST002', 'West Stati
 
 INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S001', 'ST001', null, '2024-07-16 10:00:00');
 INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S001', 'ST002', '2024-07-16 09:00:00', null);
-INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T002', 'S002', 'ST002', null, '2024-07-16 11:00:00');
-INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T002', 'S002', 'ST001', '2024-07-16 10:00:00', null);
+INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T002', 'S002', 'ST002', null, '2025-07-16 11:00:00');
+INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T002', 'S002', 'ST001', '2025-07-16 10:00:00', null);
 INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S003', 'ST001', null, '2024-07-16 19:00:00');
 INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S003', 'ST002', '2024-07-16 18:00:00', null);
 

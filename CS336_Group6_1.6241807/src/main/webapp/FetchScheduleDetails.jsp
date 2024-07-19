@@ -46,7 +46,7 @@
             Timestamp arrTime = rs.getTimestamp("Arrtime");
             Timestamp depTime = rs.getTimestamp("Deptime");
             totalStops++;
-            int fare = totalStops == 1 ? 0 : totalFare / (totalStops-1);
+            int fare = totalStops == 1 ? 0 : totalFare / totalStops;
             modalContent.append("<tr>")
                 .append("<td>").append(stationName).append("</td>")
                 .append("<td>").append(arrTime == null ? "X" : arrTime).append("</td>")
@@ -54,9 +54,11 @@
                 .append("<td>").append(fare).append("</td>")
                 .append("</tr>");
         }
+        session.setAttribute("trainTid",trainTid);
+        session.setAttribute("scheduleTid",scheduleTid);
         modalContent.append("</table>");
         modalContent.append("<p>Do you want to make a reservation of this line?</p>");
-        modalContent.append("<button onclick='makeReservation()'>Yes</button>");
+        modalContent.append("<button onclick='openReservationModal()'>Yes</button>");
         modalContent.append("<button onclick='closeReservationModal()'>No</button>");
         modalContent.append("</div>");
 

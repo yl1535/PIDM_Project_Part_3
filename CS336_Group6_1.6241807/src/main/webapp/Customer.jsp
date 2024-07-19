@@ -64,7 +64,21 @@
             	padding: 10px;
         	}
         	
+        	.book {
+            	height: calc(100% / 6);
+            	border: 1px solid black;
+            	margin-bottom: 10px;
+            	display: flex;
+            	justify-content: space-between;
+            	align-items: center;
+            	padding: 10px;
+        	}
+        	
         	.block-title {
+        		flex: 1;
+        	}
+        	
+        	.book-title {
         		flex: 1;
         	}
 
@@ -194,7 +208,9 @@
 			ApplicationDB db = new ApplicationDB();
 			Connection con = null;
 			PreparedStatement pstm = null;
+			PreparedStatement pstm2 = null;
 			ResultSet rs = null;
+			ResultSet rs2 = null;
 			try {
 				con = db.getConnection();
 		%>
@@ -212,7 +228,50 @@
     	</div>
     	<div class="bottom-part">
         	<div class="rectangle">
-            	<div class="title">Check And Book</div>
+            	<div class="title-container">
+            		<div id="bookTitle" class="book-title">Book The Trains</div>
+            		<button id="searchbookButton" onclick="openSearchBookModal()">Search For Trains</button>
+            	</div>
+            	<div class="scrollable-area">
+            		<%
+            			String BookRequest = "SELECT TrainTid, ScheduleTid, Linename FROM TrainSchedule";
+            			pstm = con.prepareStatement(BookRequest);
+            			rs = pstm.executeQuery();
+            			int bookId = 0;
+            			while (rs.next()) {
+            				String ScheduleTid = rs.getString("ScheduleTid");
+            				String TrainTid = rs.getString("TrainTid");
+            				String Linename = rs.getString("Linename");
+            				String StationRequest = "SELECT ScheduleTid, Deptime, Arrtime, Sid FROM Stops WHERE ScheduleTid = ?";
+            				pstm2 = con.prepareStatement(StationRequest);
+            				pstm2.setString(1, ScheduleTid);
+            				rs2 = pstm2.executeQuery();
+            				String Origin = "";
+            				Timestamp StartTime = null;
+            				String Destination = "";
+            				Timestamp EndTime = null;
+            				while (rs2.next()){
+            					String Sid = rs2.getString("Sid");
+            					Timestamp Arrtime = rs2.getTimestamp("Arrtime");
+            					Timestamp Deptime = rs2.getTimestamp("Deptime");
+            					if(Arrtime == null){
+            						Origin = Sid;
+            						StartTime = Deptime;
+            					}
+            					if(Deptime == null){
+            						Destination = Sid;
+            						EndTime = Arrtime;
+            					}
+            				}
+            				bookId++;
+            		%>
+            		<div class="book" id="book<%=bookId%>" onclick="">
+            			<span class="book-title"><%=ScheduleTid%> <%=TrainTid%> <%=Linename%> <%=Origin%> <%=StartTime%> <%=Destination%> <%=EndTime%></span>
+            		</div>
+            		<%
+            			}
+            		%>
+            	</div>
         	</div>
         	<div class="rectangle">
             	<div class="title">History Reservation Check</div>
@@ -255,7 +314,9 @@
 			} catch (Exception e){
 				e.printStackTrace();
 			} finally {
+				try { if (rs2 != null) rs2.close(); } catch (Exception e) { e.printStackTrace(); }
 	            try { if (rs != null) rs.close(); } catch (Exception e) { e.printStackTrace(); }
+	            try { if (pstm2 != null) pstm2.close(); } catch (Exception e) { e.printStackTrace(); }
 	            try { if (pstm != null) pstm.close(); } catch (Exception e) { e.printStackTrace(); }
 	            try { if (con != null) con.close(); } catch (Exception e) { e.printStackTrace(); }
 	        }

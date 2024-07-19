@@ -57,8 +57,8 @@ CREATE TABLE IF NOT EXISTS Stops (
     TrainTid VARCHAR(50) NOT NULL,
     ScheduleTid VARCHAR(50) NOT NULL,
     Sid VARCHAR(50) NOT NULL,
-    Deptime DATETIME NOT NULL,
-    Arrtime DATETIME NOT NULL,
+    Deptime DATETIME,
+    Arrtime DATETIME,
     PRIMARY KEY (TrainTid, ScheduleTid, Sid),
     FOREIGN KEY (TrainTid, ScheduleTid) REFERENCES TrainSchedule(TrainTid, ScheduleTid),
     FOREIGN KEY (Sid) REFERENCES Station(Sid)
@@ -110,4 +110,18 @@ INSERT INTO QuestionBox (Usr, QTitle, Question, QCode, Reply, ReplyUsr)
 VALUES ('CuTest', 'TestQuestion', 'This is a Test Question Message', 0, null, null),
 ('CuTest', 'AnsweredQuestion', 'This is a Test Answered Question', 1, 'This is Answer', 'CRTest'),
 ('AdTest', 'TestOnlyQuestion', 'This is a illegal Question', 2, 'This is Not Answer', 'AdTest');
+
+INSERT INTO Train (TrainTid) VALUES ('T001');
+INSERT INTO Train (TrainTid) VALUES ('T002');
+
+INSERT INTO TrainSchedule (TrainTid, ScheduleTid, Linename, TotalFare) VALUES ('T001', 'S001', 'Blue Line', 100);
+INSERT INTO TrainSchedule (TrainTid, ScheduleTid, Linename, TotalFare) VALUES ('T002', 'S002', 'Green Line', 120);
+
+INSERT INTO Station (Sid, Stationname, city, state) VALUES ('ST001', 'Central Station', 'New York', 'NY');
+INSERT INTO Station (Sid, Stationname, city, state) VALUES ('ST002', 'West Station', 'Chicago', 'IL');
+
+INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S001', 'ST001', null, '2024-07-16 10:00:00');
+INSERT INTO Stops (TrainTid, ScheduleTid, Sid, Deptime, Arrtime) VALUES ('T001', 'S001', 'ST002', '2024-07-16 09:00:00', null);
+
+
 

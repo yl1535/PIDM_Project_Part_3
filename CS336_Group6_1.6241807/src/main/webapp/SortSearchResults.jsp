@@ -28,7 +28,7 @@
             Timestamp Dtime = rs.getTimestamp("Dtime");
             int Fare = rs.getInt("Fare");
 %>
-        <div class="book" id="book<%=ScheduleTid%>" onclick="fetchScheduleDetails('<%=ScheduleTid%>')">
+        <div class="book" id="book<%=ScheduleTid%>" onclick="">
             <span class="book-title"><%=ScheduleTid%> <%=TrainTid%> <%=Linename%> <%=OSid%> <%=Otime%> <%=DSid%> <%=Dtime%> Fare: <%=Fare%></span>
         </div>
 <%

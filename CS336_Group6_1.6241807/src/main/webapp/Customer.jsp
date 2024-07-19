@@ -202,11 +202,27 @@
                 document.getElementById('boxTitle').innerText = 'Question Box';
             }
 
-    		function openSearchBookModal() {
+    		function fetchScheduleDetails(scheduleTid) {
+    	        var xhr = new XMLHttpRequest();
+    	        xhr.open("POST", "FetchScheduleDetails.jsp", true);
+    	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    	        xhr.onreadystatechange = function() {
+    	            if (xhr.readyState === 4 && xhr.status === 200) {
+    	                openModal(xhr.responseText);
+    	            }
+    	        };
+    	        xhr.send("scheduleTid=" + scheduleTid);
+    	    }
+
+    	    function closeReservationModal() {
+    	        closeModal();
+    	    }
+
+    	    function openSearchBookModal() {
     	        var content = `
     	            <form class="modal-form" onsubmit="searchBooks(event)">
-    	                <input type="text" id="origin" name="origin" placeholder="Enter origin station ID" required />
-    	                <input type="text" id="destination" name="destination" placeholder="Enter destination station ID" required />
+    	                <input type="text" id="origin" name="origin" placeholder="Enter origin station name" required />
+    	                <input type="text" id="destination" name="destination" placeholder="Enter destination station name" required />
     	                <input type="text" id="travelDate" name="travelDate" placeholder="Enter travel date (YYYY-MM-DD)" required />
     	                <button type="submit" class="modal-form-button">Search</button>
     	            </form>`;
@@ -294,22 +310,6 @@
     	        };
     	        xhr.send();
     	    }
-    	    
-    	    function fetchScheduleDetails(scheduleTid) {
-    	        var xhr = new XMLHttpRequest();
-    	        xhr.open("POST", "FetchScheduleDetails.jsp", true);
-    	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    	        xhr.onreadystatechange = function() {
-    	            if (xhr.readyState === 4 && xhr.status === 200) {
-    	                openModal(xhr.responseText);
-    	            }
-    	        };
-    	        xhr.send("scheduleTid=" + scheduleTid);
-    	    }
-
-    	    function closeDetailModal() {
-    	        closeModal();
-    	    }
 
 		</script>
 	</head>
@@ -346,46 +346,46 @@
         			<button id="exitSortBookButton" onclick="exitSortBookResults()" style="display: none;">Exit Sort Results</button>
     			</div>
     			<div class="scrollable-area" id="bookResults">
-        			<% 
-            			String BookRequest = "SELECT TrainTid, ScheduleTid, Linename, TotalFare FROM TrainSchedule";
-            			pstm = con.prepareStatement(BookRequest);
-            			rs = pstm.executeQuery();
-            			int bookId = 0;
-            			while (rs.next()) {
-                			String ScheduleTid = rs.getString("ScheduleTid");
-                			String TrainTid = rs.getString("TrainTid");
-                			String Linename = rs.getString("Linename");
-                			int TotalFare = rs.getInt("TotalFare");
-                			String StationRequest = "SELECT ScheduleTid, Deptime, Arrtime, Sid FROM Stops WHERE ScheduleTid = ?";
-                			pstm2 = con.prepareStatement(StationRequest);
-                			pstm2.setString(1, ScheduleTid);
-                			rs2 = pstm2.executeQuery();
-                			String Origin = "";
-                			Timestamp StartTime = null;
-                			String Destination = "";
-                			Timestamp EndTime = null;
-                			while (rs2.next()){
-                    			String Sid = rs2.getString("Sid");
-                    			Timestamp Arrtime = rs2.getTimestamp("Arrtime");
-                    			Timestamp Deptime = rs2.getTimestamp("Deptime");
-                    			if(Arrtime == null){
-                        			Origin = Sid;
-                        			StartTime = Deptime;
-                    			}
-                    			if(Deptime == null){
-                        			Destination = Sid;
-                        			EndTime = Arrtime;
-                    			}
-                			}
-                			bookId++;
-        			%>
-        			<div class="book" id="book<%=bookId%>" onclick="fetchScheduleDetails('<%=ScheduleTid%>')">
-            			<span class="book-title"><%=ScheduleTid%> <%=TrainTid%> <%=Linename%> <%=Origin%> <%=StartTime%> <%=Destination%> <%=EndTime%> Fare: <%=TotalFare%></span>
-        			</div>
-        			<% 
-            			}
-        			%>
-    			</div>
+    				<% 
+        				String BookRequest = "SELECT TrainTid, ScheduleTid, Linename, TotalFare FROM TrainSchedule";
+        				pstm = con.prepareStatement(BookRequest);
+        				rs = pstm.executeQuery();
+        				int bookId = 0;
+        				while (rs.next()) {
+            				String ScheduleTid = rs.getString("ScheduleTid");
+            				String TrainTid = rs.getString("TrainTid");
+            				String Linename = rs.getString("Linename");
+            				int TotalFare = rs.getInt("TotalFare");
+            				String StationRequest = "SELECT st.Stationname, s.Deptime, s.Arrtime FROM Stops s INNER JOIN Station st ON s.Sid = st.Sid WHERE s.ScheduleTid = ?";
+            				pstm2 = con.prepareStatement(StationRequest);
+            				pstm2.setString(1, ScheduleTid);
+            				rs2 = pstm2.executeQuery();
+            				String Origin = "";
+            				Timestamp StartTime = null;
+            				String Destination = "";
+            				Timestamp EndTime = null;
+            				while (rs2.next()){
+                				String Stationname = rs2.getString("Stationname");
+                				Timestamp Arrtime = rs2.getTimestamp("Arrtime");
+                				Timestamp Deptime = rs2.getTimestamp("Deptime");
+                				if(Arrtime == null){
+                    				Origin = Stationname;
+                    				StartTime = Deptime;
+                				}
+                				if(Deptime == null){
+                    				Destination = Stationname;
+                    				EndTime = Arrtime;
+                				}
+            				}
+            				bookId++;
+    				%>
+    				<div class="book" id="book<%=bookId%>" onclick="fetchScheduleDetails('<%=ScheduleTid%>')">
+        				<span class="book-title"><%=ScheduleTid%> <%=TrainTid%> <%=Linename%> <%=Origin%> <%=StartTime%> <%=Destination%> <%=EndTime%> Fare: <%=TotalFare%></span>
+    				</div>
+    				<% 
+        				} 
+    				%>
+				</div>
 			</div>
         	<div class="rectangle">
             	<div class="title">History Reservation Check</div>

@@ -57,7 +57,7 @@
         modalContent.append("</table>");
         modalContent.append("<p>Do you want to make a reservation of this line?</p>");
         modalContent.append("<button onclick='makeReservation()'>Yes</button>");
-        modalContent.append("<button onclick='closeDetailModal()'>No</button>");
+        modalContent.append("<button onclick='closeReservationModal()'>No</button>");
         modalContent.append("</div>");
 
         out.print(modalContent.toString());

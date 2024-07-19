@@ -22,11 +22,13 @@
 
         // Insert new search results
         String searchSQL = "INSERT INTO SearchResults (ScheduleTid, TrainTid, Linename, OSid, DSid, Otime, Dtime, Fare) " +
-                           "SELECT ts.ScheduleTid, ts.TrainTid, ts.Linename, s1.Sid AS OSid, s2.Sid AS DSid, s1.Deptime AS Otime, s2.Arrtime AS Dtime, ts.TotalFare " +
+                           "SELECT ts.ScheduleTid, ts.TrainTid, ts.Linename, st1.Stationname AS OSid, st2.Stationname AS DSid, s1.Deptime AS Otime, s2.Arrtime AS Dtime, ts.TotalFare " +
                            "FROM TrainSchedule ts " +
                            "INNER JOIN Stops s1 ON ts.ScheduleTid = s1.ScheduleTid " +
                            "INNER JOIN Stops s2 ON ts.ScheduleTid = s2.ScheduleTid " +
-                           "WHERE s1.Sid = ? AND s2.Sid = ? AND DATE(s1.Deptime) = ?";
+                           "INNER JOIN Station st1 ON s1.Sid = st1.Sid " +
+                           "INNER JOIN Station st2 ON s2.Sid = st2.Sid " +
+                           "WHERE st1.Stationname = ? AND st2.Stationname = ? AND DATE(s1.Deptime) = ?";
         pstm = con.prepareStatement(searchSQL);
         pstm.setString(1, origin);
         pstm.setString(2, destination);
@@ -48,7 +50,7 @@
             Timestamp Dtime = rs.getTimestamp("Dtime");
             int Fare = rs.getInt("Fare");
 %>
-        <div class="book" id="book<%=ScheduleTid%>" onclick="fetchScheduleDetails('<%=ScheduleTid%>')">
+        <div class="book" id="book<%=ScheduleTid%>" onclick="">
             <span class="book-title"><%=ScheduleTid%> <%=TrainTid%> <%=Linename%> <%=OSid%> <%=Otime%> <%=DSid%> <%=Dtime%> Fare: <%=Fare%></span>
         </div>
 <%
@@ -61,3 +63,4 @@
         try { if (con != null) con.close(); } catch (Exception e) { e.printStackTrace(); }
     }
 %>
+

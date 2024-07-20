@@ -132,11 +132,7 @@
             </form>
         </div>
         <div class="rectangle">
-            <h2>Customer Reservations</h2>
-            <form method="get" action="viewReservations.jsp">
-                Customer Username: <input type="text" name="username" required>
-                <button type="submit">View Reservations</button>
-            </form>
+            List Customers
         </div>
         <div class="rectangle">
         	List Schedules

@@ -64,34 +64,10 @@
             	padding: 10px;
         	}
         	
-        	.book {
-            	height: calc(100% / 6);
-            	border: 1px solid black;
-            	margin-bottom: 10px;
-            	display: flex;
-            	justify-content: space-between;
-            	align-items: center;
-            	padding: 10px;
-        	}
-        	
-        	.Res {
-            	height: calc(100% / 6);
-            	border: 1px solid black;
-            	margin-bottom: 10px;
-            	display: flex;
-            	justify-content: space-between;
-            	align-items: center;
-            	padding: 10px;
-        	}
-        	
         	.block-title {
         		flex: 1;
         	}
         	
-        	.book-title {
-        		flex: 1;
-        	}
-
         	.button {
             	margin-left: auto;
         	}
@@ -135,7 +111,6 @@
 
     	</style>
     	<script>
-    	
     		function openModal(content) {
             	var modal = document.getElementById('modal');
             	var modalContent = document.getElementById('modal-content');
@@ -147,21 +122,21 @@
             	var modal = document.getElementById('modal');
             	modal.style.display = "none";
         	}
-    		
-    		function openCreateTrainModal() {
+
+        	function openCreateTrainModal() {
                 var content = `
                     <form class="modal-form" onsubmit="createTrain(event)">
-                        <input type="text" id="newTrainTid" name="trainTid" placeholder="Train ID" required />
-                        <input type="text" id="newLinename" name="linename" placeholder="Line Name" required />
-                        <button type="submit" class="modal-form-button">Create</button>
+                        <input type="text" id="newTrainID" name="trainID" placeholder="Train ID" required />
+                        <input type="text" id="newTrainName" name="trainName" placeholder="Train Name" required />
+                        <button type="submit">Create</button>
                     </form>`;
                 openModal(content);
             }
 
             function createTrain(event) {
                 event.preventDefault();
-                var trainTid = document.getElementById('newTrainTid').value;
-                var linename = document.getElementById('newLinename').value;
+                var trainID = document.getElementById('newTrainID').value;
+                var trainName = document.getElementById('newTrainName').value;
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "AddNewTrain.jsp", true);
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -171,51 +146,21 @@
                         location.reload();
                     }
                 };
-                xhr.send("trainTid=" + trainTid + "&linename=" + linename);
-            }
-            
-            function openCreateScheduleModal() {
-                var content = `
-                    <form class="modal-form" onsubmit="createSchedule(event)">
-                        <input type="text" id="newScheduleTid" name="scheduleTid" placeholder="Schedule ID" required />
-                        <input type="text" id="newTrainTid" name="trainTid" placeholder="Train ID" required />
-                        <input type="text" id="newLinename" name="linename" placeholder="Line Name" required />
-                        <input type="text" id="newTotalFare" name="totalFare" placeholder="Total Fare" required />
-                        <button type="submit" class="modal-form-button">Create</button>
-                    </form>`;
-                openModal(content);
+                xhr.send("trainID=" + trainID + "&trainName=" + trainName);
             }
 
-            function createSchedule(event) {
-                event.preventDefault();
-                var scheduleTid = document.getElementById('newScheduleTid').value;
-                var trainTid = document.getElementById('newTrainTid').value;
-                var linename = document.getElementById('newLinename').value;
-                var totalFare = document.getElementById('newTotalFare').value;
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "AddNewSchedule.jsp", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        closeModal();
-                        location.reload();
-                    }
-                };
-                xhr.send("scheduleTid=" + scheduleTid + "&trainTid=" + trainTid + "&linename=" + linename + "&totalFare=" + totalFare);
-            }
-            
-            function openSearchModal() {
+            function openSearchTrainModal() {
                 var content = `
-                    <form class="modal-form" onsubmit="searchQuestions(event)">
-                        <input type="text" id="searchKeyword" name="keyword" placeholder="Enter search keyword" required />
+                    <form class="modal-form" onsubmit="searchTrains(event)">
+                        <input type="text" id="searchTrainKeyword" name="keyword" placeholder="Enter search keyword" required />
                         <button type="submit" class="modal-form-button">Search</button>
                     </form>`;
                 openModal(content);
             }
-    		
-    		function searchQuestions(event) {
+
+    		function searchTrains(event) {
                 event.preventDefault();
-                var keyword = document.getElementById('searchKeyword').value.toLowerCase();
+                var keyword = document.getElementById('searchTrainKeyword').value.toLowerCase();
                 var blocks = document.getElementsByClassName('block');
                 for (var i = 0; i < blocks.length; i++) {
                     var title = blocks[i].getElementsByClassName('block-title')[0].innerText.toLowerCase();
@@ -226,55 +171,81 @@
                     }
                 }
                 closeModal();
-                document.getElementById('exitSearchButton').style.display = 'block';
-                document.getElementById('openCreateModalButton').style.display = 'none';
-                document.getElementById('searchButton').style.display = 'none';
+                document.getElementById('exitSearchTrainButton').style.display = 'block';
+                document.getElementById('openCreateTrainModalButton').style.display = 'none';
+                document.getElementById('searchTrainButton').style.display = 'none';
                 document.getElementById('boxTitle').innerText = 'Search Results';
             }
-    		
-    		function exitSearchResults() {
+
+    		function exitSearchTrainResults() {
                 var blocks = document.getElementsByClassName('block');
                 for (var i = 0; i < blocks.length; i++) {
                     blocks[i].style.display = 'flex';
                 }
-                document.getElementById('exitSearchButton').style.display = 'none';
-                document.getElementById('openCreateModalButton').style.display = 'block';
-                document.getElementById('searchButton').style.display = 'block';
-                document.getElementById('boxTitle').innerText = 'Question Box';
+                document.getElementById('exitSearchTrainButton').style.display = 'none';
+                document.getElementById('openCreateTrainModalButton').style.display = 'block';
+                document.getElementById('searchTrainButton').style.display = 'block';
+                document.getElementById('boxTitle').innerText = 'Train List';
             }
 
-    		function fetchScheduleDetails(scheduleTid) {
+    		function fetchTrainDetails(trainID) {
     	        var xhr = new XMLHttpRequest();
-    	        xhr.open("POST", "FetchScheduleDetails.jsp", true);
+    	        xhr.open("POST", "FetchTrainDetails.jsp", true);
     	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     	        xhr.onreadystatechange = function() {
     	            if (xhr.readyState === 4 && xhr.status === 200) {
     	                openModal(xhr.responseText);
     	            }
     	        };
-    	        xhr.send("scheduleTid=" + scheduleTid);
+    	        xhr.send("trainID=" + trainID);
     	    }
 
-    	    function closeReservationModal() {
+    	    function closeTrainModal() {
     	        closeModal();
     	    }
+    	    
+    	    function openTrainHistoryModal() {
+                var content = `
+                    <form class="modal-form" onsubmit="searchTrainHistory(event)">
+                        <input type="text" id="searchTrainHistoryKeyword" name="keyword" placeholder="Enter train ID" required />
+                        <button type="submit" class="modal-form-button">Search</button>
+                    </form>`;
+                openModal(content);
+            }
+            
+            function searchTrainHistory(event) {
+                event.preventDefault();
+                var trainID = document.getElementById('searchTrainHistoryKeyword').value.toLowerCase();
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "FetchTrainHistory.jsp", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        document.getElementById('trainHistoryResults').innerHTML = xhr.responseText;
+                        closeModal();
+                    }
+                };
+                xhr.send("trainID=" + trainID);
+            }
+            
+            function exitTrainHistoryResults() {
+                location.reload();
+            }
 
-    	    function fetchReservationDetails(rn) {
-    	        var xhr = new XMLHttpRequest();
-    	        xhr.open("POST", "FetchReservationDetails.jsp", true);
-    	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    	        xhr.onreadystatechange = function() {
-    	            if (xhr.readyState === 4 && xhr.status === 200) {
-    	                openModal(xhr.responseText);
-    	            }
-    	        };
-    	        xhr.send("rn=" + rn);
+    		function openResolveQuestionModal(questionID) {
+    	        var content = `
+    	            <form class="modal-form" onsubmit="resolveQuestion(event, ${questionID})">
+    	                <textarea id="replyContent" name="replyContent" placeholder="Enter your reply" required></textarea>
+    	                <button type="submit" class="modal-form-button">Submit</button>
+    	            </form>`;
+    	        openModal(content);
     	    }
 
-    	    function submitResponse(qid) {
-    	        var response = document.getElementById("responseTextarea").value;
+    	    function resolveQuestion(event, questionID) {
+    	        event.preventDefault();
+    	        var replyContent = document.getElementById('replyContent').value;
     	        var xhr = new XMLHttpRequest();
-    	        xhr.open("POST", "SubmitResponse.jsp", true);
+    	        xhr.open("POST", "ResolveQuestion.jsp", true);
     	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     	        xhr.onreadystatechange = function() {
     	            if (xhr.readyState === 4 && xhr.status === 200) {
@@ -282,97 +253,101 @@
     	                location.reload();
     	            }
     	        };
-    	        xhr.send("qid=" + qid + "&response=" + response);
+    	        xhr.send("questionID=" + questionID + "&replyContent=" + replyContent);
     	    }
-    		
+
+    	    function openQuestionDetailsModal(questionID) {
+    	        var xhr = new XMLHttpRequest();
+    	        xhr.open("POST", "FetchQuestionDetails.jsp", true);
+    	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    	        xhr.onreadystatechange = function() {
+    	            if (xhr.readyState === 4 && xhr.status === 200) {
+    	                openModal(xhr.responseText);
+    	            }
+    	        };
+    	        xhr.send("questionID=" + questionID);
+    	    }
+
+    	    function closeQuestionDetailsModal() {
+    	        closeModal();
+    	    }
     	</script>
 	</head>
 	<body>
-    	<div class="top-part">
-        	<h1>Admin</h1>
+		<div class="top-part">
+        	<h1>Admin Dashboard</h1>
     	</div>
     	<div class="bottom-part">
-    		<div class="rectangle">
-            	<div class="title-container">
-                	<h2 id="boxTitle">Question Box</h2>
-                	<button id="openCreateModalButton" class="button" onclick="openCreateTrainModal()">Create</button>
-                	<button id="searchButton" class="button" onclick="openSearchModal()">Search</button>
-                	<button id="exitSearchButton" class="button" style="display:none;" onclick="exitSearchResults()">Exit Search</button>
-            	</div>
-            	<div class="scrollable-area">
-            	
-            	
-                	<!-- Question blocks go here?? -->
-                	
-                	
-                	<%
-                    DatabaseConnections dbc = new DatabaseConnections();
-                    List<Question> questionList = dbc.getAllQuestions();
-                    for (Question q : questionList) {
-                    %>
-                    <div class="block">
-                        <div class="block-title"><%= q.getQid() %>: <%= q.getQuestion() %></div>
-                        <button class="button" onclick="openCreateTrainModal()">Create</button>
-                    </div>
-                    <% } %>
-            	</div>
-        	</div>
-    		
         	<div class="rectangle">
             	<div class="title-container">
-                	<h2>Train Box</h2>
-                	<button id="openCreateModalButton" class="button" onclick="openCreateTrainModal()">Create</button>
-                	<button id="searchButton" class="button" onclick="openSearchModal()">Search</button>
-                	<button id="exitSearchButton" class="button" style="display:none;" onclick="exitSearchResults()">Exit Search</button>
+                	<h2 id="boxTitle">Train List</h2>
+                	<button onclick="openSearchTrainModal()" id="searchTrainButton">Search</button>
+                	<button onclick="exitSearchTrainResults()" id="exitSearchTrainButton" style="display:none;">Exit Search</button>
+                	<button onclick="openCreateTrainModal()" id="openCreateTrainModalButton">Create Train</button>
             	</div>
             	<div class="scrollable-area">
-                	
-                	
-                	
-                	<!-- Train blocks go here? -->
-                	
-                	
-                	
                 	<%
-                    List<Train> trainList = dbc.getAllTrains();
-                    for (Train t : trainList) {
-                    %>
-                    <div class="block">
-                        <div class="block-title"><%= t.getTid() %>: <%= t.getLinename() %></div>
-                        <button class="button" onclick="fetchScheduleDetails('<%= t.getTid() %>')">Details</button>
-                    </div>
-                    <% } %>
+                	List<Train> trainList = (List<Train>)request.getAttribute("trainList");
+                	if(trainList != null) {
+                    	for (Train train : trainList) {
+                        	String trainID = train.getTrainID();
+                        	String trainName = train.getTrainName();
+                	%>
+                    	<div class="block">
+                        	<div class="block-title"><%=trainName%> (ID: <%=trainID%>)</div>
+                        	<button onclick="fetchTrainDetails('<%=trainID%>')">View Details</button>
+                    	</div>
+                	<%
+                    	}
+                	}
+                	%>
             	</div>
         	</div>
-    		
+        	
         	<div class="rectangle">
             	<div class="title-container">
-                	<h2>Reservation Box</h2>
-                	<button id="openCreateModalButton" class="button" onclick="openCreateScheduleModal()">Create</button>
-                	<button id="searchButton" class="button" onclick="openSearchModal()">Search</button>
-                	<button id="exitSearchButton" class="button" style="display:none;" onclick="exitSearchResults()">Exit Search</button>
+                	<h2>Train History</h2>
+                	<button onclick="openTrainHistoryModal()">Search</button>
             	</div>
-            	<div class="scrollable-area">
+            	<div id="trainHistoryResults" class="scrollable-area">
             	
             	
-                	<!-- Reservation blocks go here?? -->
+                	<!-- Populate history results? -->
                 	
                 	
-                	<%
-                    List<Reservation> reservationList = dbc.getAllReservations();
-                    for (Reservation r : reservationList) {
-                    %>
-                    <div class="block">
-                        <div class="block-title"><%= r.getRn() %>: <%= r.getName() %></div>
-                        <button class="button" onclick="fetchReservationDetails('<%= r.getRn() %>')">Details</button>
-                    </div>
-                    <% } %>
             	</div>
         	</div>
+        	
+        	<div class="rectangle">
+            	<div class="title-container">
+                	<h2>Questions</h2>
+            	</div>
+            	<div class="scrollable-area">
+                	<%
+                	List<Question> questionList = (List<Question>)request.getAttribute("questionList");
+                	if(questionList != null) {
+                    	for (Question question : questionList) {
+                        	String questionID = question.getQuestionID();
+                        	String questionContent = question.getQuestionContent();
+                        	LocalDateTime createdAt = question.getCreatedAt();
+                	%>
+                    	<div class="block">
+                        	<div class="block-title"><%=questionContent%> (ID: <%=questionID%>)</div>
+                        	<button onclick="openQuestionDetailsModal('<%=questionID%>')">View Details</button>
+                        	<button onclick="openResolveQuestionModal('<%=questionID%>')">Resolve</button>
+                    	</div>
+                	<%
+                    	}
+                	}
+                	%>
+            	</div>
+        	</div>
+        	
     	</div>
 
     	<div id="modal" class="modal">
-        	<div id="modal-content" class="modal-content"></div>
+        	<div class="modal-content" id="modal-content">
+        	</div>
     	</div>
 	</body>
 </html>

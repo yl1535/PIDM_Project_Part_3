@@ -30,7 +30,7 @@
         	}
 
         	.rectangle {
-            	width: calc((100% / 3) - 20px);
+            	width: calc((100% / 6) - 20px);
             	height: 80%;
             	border: 2px solid black;
             	position: relative;
@@ -122,232 +122,135 @@
             	var modal = document.getElementById('modal');
             	modal.style.display = "none";
         	}
-
-        	function openCreateTrainModal() {
-                var content = `
-                    <form class="modal-form" onsubmit="createTrain(event)">
-                        <input type="text" id="newTrainID" name="trainID" placeholder="Train ID" required />
-                        <input type="text" id="newTrainName" name="trainName" placeholder="Train Name" required />
-                        <button type="submit">Create</button>
-                    </form>`;
-                openModal(content);
-            }
-
-            function createTrain(event) {
-                event.preventDefault();
-                var trainID = document.getElementById('newTrainID').value;
-                var trainName = document.getElementById('newTrainName').value;
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "AddNewTrain.jsp", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        closeModal();
-                        location.reload();
-                    }
-                };
-                xhr.send("trainID=" + trainID + "&trainName=" + trainName);
-            }
-
-            function openSearchTrainModal() {
-                var content = `
-                    <form class="modal-form" onsubmit="searchTrains(event)">
-                        <input type="text" id="searchTrainKeyword" name="keyword" placeholder="Enter search keyword" required />
-                        <button type="submit" class="modal-form-button">Search</button>
-                    </form>`;
-                openModal(content);
-            }
-
-    		function searchTrains(event) {
-                event.preventDefault();
-                var keyword = document.getElementById('searchTrainKeyword').value.toLowerCase();
-                var blocks = document.getElementsByClassName('block');
-                for (var i = 0; i < blocks.length; i++) {
-                    var title = blocks[i].getElementsByClassName('block-title')[0].innerText.toLowerCase();
-                    if (title.includes(keyword)) {
-                        blocks[i].style.display = 'flex';
-                    } else {
-                        blocks[i].style.display = 'none';
-                    }
-                }
-                closeModal();
-                document.getElementById('exitSearchTrainButton').style.display = 'block';
-                document.getElementById('openCreateTrainModalButton').style.display = 'none';
-                document.getElementById('searchTrainButton').style.display = 'none';
-                document.getElementById('boxTitle').innerText = 'Search Results';
-            }
-
-    		function exitSearchTrainResults() {
-                var blocks = document.getElementsByClassName('block');
-                for (var i = 0; i < blocks.length; i++) {
-                    blocks[i].style.display = 'flex';
-                }
-                document.getElementById('exitSearchTrainButton').style.display = 'none';
-                document.getElementById('openCreateTrainModalButton').style.display = 'block';
-                document.getElementById('searchTrainButton').style.display = 'block';
-                document.getElementById('boxTitle').innerText = 'Train List';
-            }
-
-    		function fetchTrainDetails(trainID) {
-    	        var xhr = new XMLHttpRequest();
-    	        xhr.open("POST", "FetchTrainDetails.jsp", true);
-    	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    	        xhr.onreadystatechange = function() {
-    	            if (xhr.readyState === 4 && xhr.status === 200) {
-    	                openModal(xhr.responseText);
-    	            }
-    	        };
-    	        xhr.send("trainID=" + trainID);
-    	    }
-
-    	    function closeTrainModal() {
-    	        closeModal();
-    	    }
-    	    
-    	    function openTrainHistoryModal() {
-                var content = `
-                    <form class="modal-form" onsubmit="searchTrainHistory(event)">
-                        <input type="text" id="searchTrainHistoryKeyword" name="keyword" placeholder="Enter train ID" required />
-                        <button type="submit" class="modal-form-button">Search</button>
-                    </form>`;
-                openModal(content);
-            }
-            
-            function searchTrainHistory(event) {
-                event.preventDefault();
-                var trainID = document.getElementById('searchTrainHistoryKeyword').value.toLowerCase();
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "FetchTrainHistory.jsp", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        document.getElementById('trainHistoryResults').innerHTML = xhr.responseText;
-                        closeModal();
-                    }
-                };
-                xhr.send("trainID=" + trainID);
-            }
-            
-            function exitTrainHistoryResults() {
-                location.reload();
-            }
-
-    		function openResolveQuestionModal(questionID) {
-    	        var content = `
-    	            <form class="modal-form" onsubmit="resolveQuestion(event, ${questionID})">
-    	                <textarea id="replyContent" name="replyContent" placeholder="Enter your reply" required></textarea>
-    	                <button type="submit" class="modal-form-button">Submit</button>
-    	            </form>`;
-    	        openModal(content);
-    	    }
-
-    	    function resolveQuestion(event, questionID) {
-    	        event.preventDefault();
-    	        var replyContent = document.getElementById('replyContent').value;
-    	        var xhr = new XMLHttpRequest();
-    	        xhr.open("POST", "ResolveQuestion.jsp", true);
-    	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    	        xhr.onreadystatechange = function() {
-    	            if (xhr.readyState === 4 && xhr.status === 200) {
-    	                closeModal();
-    	                location.reload();
-    	            }
-    	        };
-    	        xhr.send("questionID=" + questionID + "&replyContent=" + replyContent);
-    	    }
-
-    	    function openQuestionDetailsModal(questionID) {
-    	        var xhr = new XMLHttpRequest();
-    	        xhr.open("POST", "FetchQuestionDetails.jsp", true);
-    	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    	        xhr.onreadystatechange = function() {
-    	            if (xhr.readyState === 4 && xhr.status === 200) {
-    	                openModal(xhr.responseText);
-    	            }
-    	        };
-    	        xhr.send("questionID=" + questionID);
-    	    }
-
-    	    function closeQuestionDetailsModal() {
-    	        closeModal();
-    	    }
-    	</script>
+    		</script>
 	</head>
 	<body>
+		<%
+        	ApplicationDB db = new ApplicationDB();
+        	Connection con = null;
+        	PreparedStatement pstm = null;
+        	PreparedStatement pstm2 = null;
+        	ResultSet rs = null;
+        	try {
+            	con = db.getConnection();
+            	String Username = (String) session.getAttribute("Username");
+    	%>
 		<div class="top-part">
-        	<h1>Admin Dashboard</h1>
+        	<h1>Welcome, Admin <%=Username%></h1>
     	</div>
     	<div class="bottom-part">
-        	<div class="rectangle">
-            	<div class="title-container">
-                	<h2 id="boxTitle">Train List</h2>
-                	<button onclick="openSearchTrainModal()" id="searchTrainButton">Search</button>
-                	<button onclick="exitSearchTrainResults()" id="exitSearchTrainButton" style="display:none;">Exit Search</button>
-                	<button onclick="openCreateTrainModal()" id="openCreateTrainModalButton">Create Train</button>
+			<div class="rectangle">
+				<div class="title-container">
+            		<div id="CRTitle" class="CR-Title">Edit/Delete Customer Representatives</div>
             	</div>
-            	<div class="scrollable-area">
-                	<%
-                	List<Train> trainList = (List<Train>)request.getAttribute("trainList");
-                	if(trainList != null) {
-                    	for (Train train : trainList) {
-                        	String trainID = train.getTrainID();
-                        	String trainName = train.getTrainName();
-                	%>
-                    	<div class="block">
-                        	<div class="block-title"><%=trainName%> (ID: <%=trainID%>)</div>
-                        	<button onclick="fetchTrainDetails('<%=trainID%>')">View Details</button>
-                    	</div>
-                	<%
-                    	}
-                	}
-                	%>
-            	</div>
-        	</div>
-        	
-        	<div class="rectangle">
-            	<div class="title-container">
-                	<h2>Train History</h2>
-                	<button onclick="openTrainHistoryModal()">Search</button>
-            	</div>
-            	<div id="trainHistoryResults" class="scrollable-area">
             	
-            	
-                	<!-- Populate history results? -->
-                	
-                	
-            	</div>
-        	</div>
-        	
+			</div>
         	<div class="rectangle">
-            	<div class="title-container">
-                	<h2>Questions</h2>
+				<div class="title-container">
+            		<div id="SRTitle" class="SR-Title">Obtain Sales Report</div>
             	</div>
-            	<div class="scrollable-area">
-                	<%
-                	List<Question> questionList = (List<Question>)request.getAttribute("questionList");
-                	if(questionList != null) {
-                    	for (Question question : questionList) {
-                        	String questionID = question.getQuestionID();
-                        	String questionContent = question.getQuestionContent();
-                        	LocalDateTime createdAt = question.getCreatedAt();
-                	%>
-                    	<div class="block">
-                        	<div class="block-title"><%=questionContent%> (ID: <%=questionID%>)</div>
-                        	<button onclick="openQuestionDetailsModal('<%=questionID%>')">View Details</button>
-                        	<button onclick="openResolveQuestionModal('<%=questionID%>')">Resolve</button>
-                    	</div>
-                	<%
-                    	}
-                	}
-                	%>
+            	<form method="POST" action="Admin.jsp">
+            		<div>
+                		<label for="year">Year:</label>
+                		<input type="number" id="year" name="year" required>
+            		</div>
+            		<div>
+                		<label for="month">Month:</label>
+                		<input type="number" id="month" name="month" min="1" max="12" required>
+            		</div>
+            		<div>
+                		<button type="submit" class="modal-form-button">Get Report</button>
+            		</div>
+            	</form>
+			</div>
+			<div class="rectangle">
+				<div class="title-container">
+            		<div id="LRTitle" class="LR-Title">Produce List of Reservations</div>
             	</div>
-        	</div>
-        	
+            	
+			</div>
+			<div class="rectangle">
+				<div class="title-container">
+            		<div id="TRTitle" class="TR-Title">Produce Total Revenue</div>
+            	</div>
+            	
+			</div>
+			<div class="rectangle">
+				<div class="title-container">
+            		<div id="BCTitle" class="BC-Title">Determine Best Customer</div>
+            	</div>
+            	
+			</div>
+			<div class="rectangle">
+				<div class="title-container">
+            		<div id="FATitle" class="FA-Title">Determine Most Popular Lines</div>
+            	</div>
+            	
+			</div>
     	</div>
 
-    	<div id="modal" class="modal">
-        	<div class="modal-content" id="modal-content">
-        	</div>
+    	<div id="modal" class="modal" onclick="closeModal()">
+        	<div id="modal-content" class="modal-content" onclick="event.stopPropagation()"></div>
     	</div>
+    	<%
+        	if (request.getMethod().equalsIgnoreCase("POST")) {
+            	int year = Integer.parseInt(request.getParameter("year"));
+            	int month = Integer.parseInt(request.getParameter("month"));
+
+            	String sql = "SELECT ts.Linename, " +
+                             "SUM(CASE WHEN r.RN IS NOT NULL THEN 1 ELSE 0 END) AS TotalPeople, " +
+                             "SUM(CASE WHEN r.RN IS NOT NULL THEN ts.TotalFare ELSE 0 END) AS TotalFare " +
+                             "FROM TrainSchedule ts " +
+                             "LEFT JOIN Reservations r ON ts.TrainTid = r.TrainTid AND ts.ScheduleTid = r.ScheduleTid " +
+                             "LEFT JOIN Stops s ON ts.TrainTid = s.TrainTid AND ts.ScheduleTid = s.ScheduleTid " +
+                             "WHERE MONTH(s.Deptime) = ? AND YEAR(s.Deptime) = ? " +
+                             "GROUP BY ts.Linename";
+
+            	try {
+                	pstm = con.prepareStatement(sql);
+                	pstm.setInt(1, month);
+                	pstm.setInt(2, year);
+                	rs = pstm.executeQuery();
+
+                	StringBuilder report = new StringBuilder();
+                	report.append("<h2>Sales Report</h2>");
+                	report.append("<table style='width:100%; text-align:center;'>");
+                	report.append("<tr><th>Line Name</th><th>Total People</th><th>Total Fare Earned</th></tr>");
+
+                	int totalPeople = 0;
+                	int totalFare = 0;
+
+                	while (rs.next()) {
+                    	String lineName = rs.getString("Linename");
+                    	int people = rs.getInt("TotalPeople");
+                    	int fare = rs.getInt("TotalFare");
+
+                    	totalPeople += people;
+                    	totalFare += fare;
+
+                    	report.append("<tr><td>").append(lineName).append("</td><td>").append(people).append("</td><td>").append(fare).append("</td></tr>");
+                	}
+
+                	report.append("<tr><td>Total</td><td>").append(totalPeople).append("</td><td>").append(totalFare).append("</td></tr>");
+                	report.append("</table>");
+
+                	out.println("<script>openModal(`" + report.toString() + "`);</script>");
+            	} catch (SQLException e) {
+                	e.printStackTrace();
+            	} finally {
+                	try { if (rs != null) rs.close(); } catch (Exception e) { e.printStackTrace(); }
+                	try { if (pstm != null) pstm.close(); } catch (Exception e) { e.printStackTrace(); }
+            	}	
+        	}
+    	
+        	} catch (Exception e) {
+            	e.printStackTrace();
+        	} finally {
+            	try { if (rs != null) rs.close(); } catch (Exception e) { e.printStackTrace(); }
+            	try { if (pstm2 != null) pstm2.close(); } catch (Exception e) { e.printStackTrace(); }
+            	try { if (pstm != null) pstm.close(); } catch (Exception e) { e.printStackTrace(); }
+            	try { if (con != null) con.close(); } catch (Exception e) { e.printStackTrace(); }
+        	}
+    	%>
 	</body>
 </html>

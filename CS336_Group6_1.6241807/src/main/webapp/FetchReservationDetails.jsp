@@ -14,7 +14,7 @@
     try {
         con = db.getConnection();
 
-        String resDetailsSQL = "SELECT R.ReservateDate, R.TrainTid, R.ScheduleTid, TS.TotalFare, " +
+        String resDetailsSQL = "SELECT R.ReservateDate, R.TrainTid, R.ScheduleTid, TS.TotalFare, TS.Linename, " +
                                "(SELECT Deptime FROM Stops WHERE TrainTid = R.TrainTid AND ScheduleTid = R.ScheduleTid AND Arrtime IS NULL) AS StartTime, " +
                                "(SELECT Arrtime FROM Stops WHERE TrainTid = R.TrainTid AND ScheduleTid = R.ScheduleTid AND Deptime IS NULL) AS EndTime " +
                                "FROM Reservations R " +
@@ -32,6 +32,7 @@
             int totalFare = rs.getInt("TotalFare");
             Timestamp startTime = rs.getTimestamp("StartTime");
             Timestamp endTime = rs.getTimestamp("EndTime");
+            String Linename = rs.getString("Linename");
 
             boolean ifNotHistory = LocalDateTime.now().isBefore(startTime.toLocalDateTime());
 
@@ -39,7 +40,7 @@
             modalContent.append("<div style='text-align: center;'>");
             modalContent.append("<h3>Reservation No: ").append(rn).append("</h3>");
             modalContent.append("<p>Made at: ").append(reservateDate).append("</p>");
-            modalContent.append("<p>Train: ").append(trainTid).append("</p>");
+            modalContent.append("<p>Train: ").append(trainTid).append(", Transit Line: ").append(Linename).append(", ID: ").append(scheduleTid).append("</p>");
             modalContent.append("<p>Time: ").append(startTime).append(" ~ ").append(endTime).append("</p>");
             modalContent.append("<p>Cost: ").append(totalFare).append("</p>");
 

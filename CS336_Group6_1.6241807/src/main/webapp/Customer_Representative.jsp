@@ -104,7 +104,6 @@
             event.preventDefault();
             var CRLSName = document.getElementById('CRLSName').value;
             var CRLSType = document.getElementById('CRLSType').value;
-            
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "CRListSchedule.jsp", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -114,6 +113,21 @@
                 }
             };
             xhr.send("CRLSName=" + CRLSName + "&CRLSType=" + CRLSType);
+        }
+        
+        function fetchCustomers(event) {
+            event.preventDefault();
+            var CRLCLine = document.getElementById('CRLCLine').value;
+            var CRLCTime = document.getElementById('CRLCTime').value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "CRListCustomer.jsp", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    openModal(xhr.responseText);
+                }
+            };
+            xhr.send("CRLCLine=" + CRLCLine + "&CRLCTime=" + CRLCTime);
         }
     </script>
 </head>
@@ -140,7 +154,14 @@
             Edit Train Schedules
         </div>
         <div class="rectangle">
-            List Customers
+            <div class="title-container">
+            	<div id="CustomerTitle" class="Customer-Title">List Customers</div>
+            </div>
+            <form class="modal-form" onsubmit="fetchCustomers(event)">
+    			Type in Target Transit Line Name: <input type="text" name="CRLCLine" id="CRLCLine" required><br>
+    			Type in Target Day: <input type="date" name="CRLCTime" id="CRLCTime" required>
+    			<button type="submit">Find Correspond Customers</button>
+			</form>
         </div>
         <div class="rectangle">
         	<div class="title-container">

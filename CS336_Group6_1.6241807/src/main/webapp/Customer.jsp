@@ -9,10 +9,10 @@
     	<style>
         	body, html {
             	margin: 0;
-            	padding: 0;
             	height: 100%;
             	display: flex;
             	flex-direction: column;
+            	align-items: center;
         	}
 
         	.top-part {

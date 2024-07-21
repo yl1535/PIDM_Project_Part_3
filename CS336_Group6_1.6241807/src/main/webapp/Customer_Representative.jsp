@@ -5,7 +5,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>Customer Representative Portal</title>
     <style>
         body, html {
@@ -26,12 +25,12 @@
             display: flex;
             justify-content: space-around;
             align-items: flex-start;
-            width: 100%;
         }
         .rectangle {
             width: calc((100% / 4) - 20px);
             height: 80%;
             border: 2px solid black;
+            position: relative;
             padding: 10px;
             display: flex;
             flex-direction: column;
@@ -100,6 +99,22 @@
 	        };
 	        xhr.send("qTitle=" + qTitle + "&question=" + question + "&qCode=" + qCode);
         }
+        
+        function fetchSchedules(event) {
+            event.preventDefault();
+            var CRLSName = document.getElementById('CRLSName').value;
+            var CRLSType = document.getElementById('CRLSType').value;
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "CRListSchedule.jsp", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    openModal(xhr.responseText);
+                }
+            };
+            xhr.send("CRLSName=" + CRLSName + "&CRLSType=" + CRLSType);
+        }
     </script>
 </head>
 <body>
@@ -122,20 +137,24 @@
     </div>
     <div class="bottom-part">
         <div class="rectangle">
-            <h2>Edit Train Schedules</h2>
-            <form method="post" action="editSchedule.jsp">
-                Train ID: <input type="text" name="trainId" required><br>
-                Schedule ID: <input type="text" name="scheduleId" required><br>
-                Departure Time: <input type="datetime-local" name="departureTime" required><br>
-                Arrival Time: <input type="datetime-local" name="arrivalTime" required><br>
-                <button type="submit">Edit Schedule</button>
-            </form>
+            Edit Train Schedules
         </div>
         <div class="rectangle">
             List Customers
         </div>
         <div class="rectangle">
-        	List Schedules
+        	<div class="title-container">
+        		<div id="scheduleTitle" class="schedule-Title">List Schedules</div>
+        	</div>
+        	<form class="modal-form" onsubmit="fetchSchedules(event)">
+        		Type in Target Station Name: <input type="text" name="CRLSName" id="CRLSName" required><br>
+        		Choose Station Type: 
+        		<select name="CRLSType" id="CRLSType" size=1>
+        			<option value="Origin">Origin Station</option>
+        			<option value="Destination">Destination Station</option>
+        		</select>
+        		<button type="submit">Find Correspond Schedules</button>
+        	</form>
         </div>
         <div class="rectangle">
             <div class="title-container">
@@ -143,7 +162,7 @@
             </div>
             <div class="scrollable-area">
                 <%
-                    String BlockRequest = "SELECT QTitle, Question, QCode, Reply, ReplyUsr FROM QuestionBox";
+                    String BlockRequest = "SELECT QTitle, Question, QCode, ReplyUsr FROM QuestionBox";
                     pstm = con.prepareStatement(BlockRequest);
                     rs = pstm.executeQuery();
                     int blockId = 0;
@@ -151,7 +170,6 @@
                         String QTitle = rs.getString("QTitle");
                         String Question = rs.getString("Question");
                         int QCode = rs.getInt("QCode");
-                        String Reply = rs.getString("Reply");
                         String ReplyUsr = rs.getString("ReplyUsr");
                         blockId++;
                         boolean ifAnswered = (ReplyUsr != null);

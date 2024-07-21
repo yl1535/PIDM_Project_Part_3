@@ -129,6 +129,120 @@
             };
             xhr.send("CRLCLine=" + CRLCLine + "&CRLCTime=" + CRLCTime);
         }
+        
+        function fetchEditSchedules(event) {
+            event.preventDefault();
+            var CRETSSTid = document.getElementById('CRETSSTid').value;
+            var CRETSOperation = document.getElementById('CRETSOperation').value;
+
+            if (CRETSOperation === "Delete") {
+                if (confirm('Are you sure you want to delete this schedule?')) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "DeleteSchedule.jsp", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            alert('Schedule deleted successfully.');
+                        }
+                    };
+                    xhr.send("ScheduleTid=" + CRETSSTid);
+                }
+            } else {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "EditScheduleDetails.jsp", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        openModal(xhr.responseText);
+                    }
+                };
+                xhr.send("ScheduleTid=" + CRETSSTid);
+            }
+        }
+        
+        function openEditModal(type, scheduleTid) {
+            var modalContent = document.getElementById('modal-content');
+            var modalHtml = '';
+
+            if (type === 'Linename' || type === 'TrainTid' || type === 'TotalFare') {
+                modalHtml = '<div style="text-align:center;">' +
+                            '<h2>Edit ' + type + '</h2>' +
+                            '<form onsubmit="submitEdit(event, \'' + type + '\', \'' + scheduleTid + '\')">' +
+                            '<input type="text" id="editInput" required>' +
+                            '<button type="submit">Submit</button>' +
+                            '</form></div>';
+            } else if (type === 'Stops') {
+                modalHtml = '<div style="text-align:center;">' +
+                            '<h2>Edit/Delete Stops</h2>' +
+                            '<form onsubmit="submitEditStop(event, \'' + scheduleTid + '\')">' +
+                            'Station ID: <input type="text" id="stopSid" required><br>' +
+                            'Arrival Time: <input type="datetime-local" id="stopArrtime"><br>' +
+                            'Departure Time: <input type="datetime-local" id="stopDeptime"><br>' +
+                            '<select id="stopOperation">' +
+                            '<option value="Add">Add</option>' +
+                            '<option value="Edit">Edit</option>' +
+                            '<option value="Delete">Delete</option>' +
+                            '</select>' +
+                            '<button type="submit">Submit</button>' +
+                            '</form></div>';
+            }
+
+            var secondModal = document.createElement('div');
+            secondModal.id = 'second-modal';
+            secondModal.className = 'modal';
+            secondModal.innerHTML = '<div class="modal-content" onclick="event.stopPropagation()">' + modalHtml + '</div>';
+            secondModal.onclick = function() {
+                secondModal.remove();
+            };
+            document.body.appendChild(secondModal);
+            secondModal.style.display = 'flex';
+        }
+
+        function submitEdit(event, type, scheduleTid) {
+            event.preventDefault();
+            var inputValue = document.getElementById('editInput').value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "EditSchedule.jsp", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    if (xhr.responseText.includes("Update cancelled")) {
+                        alert(xhr.responseText);
+                    } else {
+                        alert('Update successful.');
+                        document.getElementById('second-modal').remove();
+                        openModal(xhr.responseText);
+                    }
+                }
+            };
+            xhr.send("type=" + type + "&value=" + inputValue + "&ScheduleTid=" + scheduleTid);
+        }
+
+        function submitEditStop(event, scheduleTid) {
+            event.preventDefault();
+            var stopSid = document.getElementById('stopSid').value;
+            var stopArrtime = document.getElementById('stopArrtime').value || '';
+            var stopDeptime = document.getElementById('stopDeptime').value || '';
+            var stopOperation = document.getElementById('stopOperation').value;
+
+            if (stopArrtime === null && stopDeptime === null && !stopOperation === 'Delete') {
+                alert("Either Arrival Time or Departure Time must be provided.");
+                return;
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "EditStops.jsp", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    document.getElementById('second-modal').remove();
+                    openModal(xhr.responseText);
+                }
+            };
+            xhr.send("stopSid=" + stopSid + "&stopArrtime=" + stopArrtime + "&stopDeptime=" + stopDeptime + "&stopOperation=" + stopOperation + "&ScheduleTid=" + scheduleTid);
+        }
+
     </script>
 </head>
 <body>
@@ -151,7 +265,18 @@
     </div>
     <div class="bottom-part">
         <div class="rectangle">
-            Edit Train Schedules
+            <div class="title-container">
+            	<div id="TrainTitle" class="Train-Title">Edit/Delete Train Schedules</div>
+            </div>
+            <form class="modal-form" onsubmit="fetchEditSchedules(event)">
+            	Type in Target Schedule-Tid: <input type="text" name="CRETSSTid" id="CRETSSTid" required><br>
+            	Type in Specific Operation: 
+            	<select name="CRETSOperation" id="CRETSOperation" size=1>
+            		<option value="Edit">Edit</option>
+            		<option value="Delete">Delete</option>
+            	</select>
+            	<button type="submit">Execute</button>
+            </form>
         </div>
         <div class="rectangle">
             <div class="title-container">

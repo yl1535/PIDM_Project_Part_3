@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS Stops (
     Deptime DATETIME,
     Arrtime DATETIME,
     PRIMARY KEY (TrainTid, ScheduleTid, Sid),
-    FOREIGN KEY (TrainTid, ScheduleTid) REFERENCES TrainSchedule(TrainTid, ScheduleTid),
+    FOREIGN KEY (TrainTid, ScheduleTid) REFERENCES TrainSchedule(TrainTid, ScheduleTid) ON UPDATE CASCADE,
     FOREIGN KEY (Sid) REFERENCES Station(Sid)
 );
 
@@ -74,10 +74,10 @@ CREATE TABLE IF NOT EXISTS Reservations (
     ScheduleTid VARCHAR(50) NOT NULL,
     PRIMARY KEY (Usr, RN, TrainTid, ScheduleTid),
     FOREIGN KEY (Usr) REFERENCES Passengers(Usr),
-    FOREIGN KEY (TrainTid, ScheduleTid) REFERENCES TrainSchedule(TrainTid, ScheduleTid)
+    FOREIGN KEY (TrainTid, ScheduleTid) REFERENCES TrainSchedule(TrainTid, ScheduleTid) ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Pass (
+/* CREATE TABLE IF NOT EXISTS Pass (
     Usr VARCHAR(30) NOT NULL,
     RN INT NOT NULL,
     TrainTid VARCHAR(50) NOT NULL,
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS Pass (
     PRIMARY KEY (Usr, RN, TrainTid, ScheduleTid, Sid),
     FOREIGN KEY (Usr, RN, TrainTid, ScheduleTid) REFERENCES Reservations(Usr, RN, TrainTid, ScheduleTid),
     FOREIGN KEY (Sid) REFERENCES Station(Sid)
-);
+); */ /*Not sure if this table is needed */
 
 CREATE TABLE IF NOT EXISTS SearchResults (	/* This is a temporary storage use table, do not need to include in ER diagram */
 	ScheduleTid VARCHAR(50) PRIMARY KEY,

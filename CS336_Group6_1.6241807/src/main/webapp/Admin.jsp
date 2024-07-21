@@ -83,6 +83,12 @@
                 align-self: flex-end;
                 padding: 5px 10px;
             }
+            
+            .modal-form-button-SPECIAL {
+            	align-self: flex-end;
+            	padding: 50px 100px;
+            	font-weight: bold;
+            }
 
         </style>
         <script>
@@ -126,6 +132,18 @@
                     }
                 };
                 xhr.send('criteria=' + criteria + '&search=' + search);
+            }
+
+            function fetchMostWelcomedCustomer() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'FindMostWelcomedCustomer.jsp', true);
+                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        openModal(xhr.responseText);
+                    }
+                };
+                xhr.send();
             }
         </script>
     </head>
@@ -182,7 +200,9 @@
                 <div class="title-container">
                     <div id="BCTitle" class="BC-Title">Determine Best Customer</div>
                 </div>
-                
+                <div>
+                    <button type="button" class="modal-form-button-SPECIAL" onclick="fetchMostWelcomedCustomer()" style="BOLD">Find Out Our Most Welcomed Customer!!!</button>
+                </div>
             </div>
             <div class="rectangle">
                 <div class="title-container">
@@ -193,7 +213,7 @@
         </div>
 
         <div id="modal" class="modal" onclick="closeModal()">
-        	<div id="modal-content" class="modal-content" onclick="event.stopPropagation()"></div>
-    	</div>
+            <div id="modal-content" class="modal-content" onclick="event.stopPropagation()"></div>
+        </div>
     </body>
 </html>

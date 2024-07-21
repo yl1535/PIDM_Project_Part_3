@@ -30,7 +30,7 @@
             }
 
             .rectangle {
-                width: calc((100% / 6) - 20px);
+                width: calc((100% / 5) - 20px);
                 height: 80%;
                 border: 2px solid black;
                 position: relative;
@@ -47,31 +47,6 @@
                 border-bottom: 2px solid black;
             }
             
-            .scrollable-area {
-                flex: 1;
-                overflow-y: auto;
-                padding: 10px;
-                position: relative;
-            }
-
-            .block {
-                height: calc(100% / 6);
-                border: 1px solid black;
-                margin-bottom: 10px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 10px;
-            }
-            
-            .block-title {
-                flex: 1;
-            }
-            
-            .button {
-                margin-left: auto;
-            }
-
             .modal {
                 display: none;
                 position: fixed;
@@ -186,7 +161,7 @@
             </div>
             <div class="rectangle">
                 <div class="title-container">
-                    <div id="LRTitle" class="LR-Title">Produce List of Reservations</div>
+                    <div id="LRTitle" class="LR-Title">Produce List of Reservations And Total Revenue</div>
                 </div>
                 <div>
                     <label for="criteria">Select Criteria:</label>
@@ -202,12 +177,6 @@
                 <div>
                     <button type="button" class="modal-form-button" onclick="fetchAdminReservationList()">Search</button>
                 </div>
-            </div>
-            <div class="rectangle">
-                <div class="title-container">
-                    <div id="TRTitle" class="TR-Title">Produce Total Revenue</div>
-                </div>
-                
             </div>
             <div class="rectangle">
                 <div class="title-container">

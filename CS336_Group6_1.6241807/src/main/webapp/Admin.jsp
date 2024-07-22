@@ -85,9 +85,9 @@
             }
             
             .modal-form-button-SPECIAL {
-            	align-self: flex-end;
-            	padding: 50px 100px;
-            	font-weight: bold;
+                align-self: flex-end;
+                padding: 50px 100px;
+                font-weight: bold;
             }
 
         </style>
@@ -145,6 +145,21 @@
                 };
                 xhr.send();
             }
+
+            function fetchMostPopularLines() {
+                var year = document.getElementById('popYear').value;
+                var month = document.getElementById('popMonth').value;
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'FindMostPopularLines.jsp', true);
+                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        openModal(xhr.responseText);
+                    }
+                };
+                xhr.send('year=' + year + '&month=' + month);
+            }
         </script>
     </head>
     <body>
@@ -201,17 +216,26 @@
                     <div id="BCTitle" class="BC-Title">Determine Best Customer</div>
                 </div>
                 <div>
-                    <button type="button" class="modal-form-button-SPECIAL" onclick="fetchMostWelcomedCustomer()" style="BOLD">Find Out Our Most Welcomed Customer!!!</button>
+                    <button type="button" class="modal-form-button-SPECIAL" onclick="fetchMostWelcomedCustomer()">Find Out Our Most Welcomed Customer!!!</button>
                 </div>
             </div>
             <div class="rectangle">
                 <div class="title-container">
-                    <div id="FATitle" class="FA-Title">Determine Most Popular Lines</div>
+                    <div id="FATitle" class="FA-Title">Find Most Popular Lines</div>
                 </div>
-                
+                <div>
+                    <label for="popYear">Year:</label>
+                    <input type="number" id="popYear" name="popYear" required>
+                </div>
+                <div>
+                    <label for="popMonth">Month:</label>
+                    <input type="number" id="popMonth" name="popMonth" min="1" max="12" required>
+                </div>
+                <div>
+                    <button type="button" class="modal-form-button" onclick="fetchMostPopularLines()">Find Out</button>
+                </div>
             </div>
         </div>
-
         <div id="modal" class="modal" onclick="closeModal()">
             <div id="modal-content" class="modal-content" onclick="event.stopPropagation()"></div>
         </div>

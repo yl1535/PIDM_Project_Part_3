@@ -160,6 +160,60 @@
                 };
                 xhr.send('year=' + year + '&month=' + month);
             }
+            
+            function updateForm() {
+                var mode = document.getElementById('mode').value;
+                var usernameLabel = document.getElementById('usernameLabel');
+                var username = document.getElementById('username');
+                var newUsernameLabel = document.getElementById('newUsernameLabel');
+                var newUsername = document.getElementById('newUsername');
+                var passwordLabel = document.getElementById('passwordLabel');
+                var password = document.getElementById('password');
+
+                if (mode === 'add') {
+                    usernameLabel.style.display = 'none';
+                    username.style.display = 'none';
+                    newUsernameLabel.style.display = 'block';
+                    newUsername.style.display = 'block';
+                    passwordLabel.style.display = 'block';
+                    password.style.display = 'block';
+                } else if (mode === 'edit') {
+                    usernameLabel.style.display = 'block';
+                    username.style.display = 'block';
+                    newUsernameLabel.style.display = 'block';
+                    newUsername.style.display = 'block';
+                    passwordLabel.style.display = 'block';
+                    password.style.display = 'block';
+                } else if (mode === 'delete') {
+                    usernameLabel.style.display = 'block';
+                    username.style.display = 'block';
+                    newUsernameLabel.style.display = 'none';
+                    newUsername.style.display = 'none';
+                    passwordLabel.style.display = 'none';
+                    password.style.display = 'none';
+                }
+            }
+
+            function manageCustomerRepresentative() {
+                var mode = document.getElementById('mode').value;
+                var username = document.getElementById('username').value;
+                var newUsername = document.getElementById('newUsername').value;
+                var password = document.getElementById('password').value;
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'ManageCustomerRepresentative.jsp', true);
+                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        openModal(xhr.responseText);
+                    }
+                };
+                xhr.send('mode=' + mode + '&username=' + username + '&newUsername=' + newUsername + '&password=' + password);
+            }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                updateForm();
+            });
         </script>
     </head>
     <body>
@@ -168,14 +222,39 @@
         %>
         <div class="top-part">
             <h1>Welcome, Admin <%=Username%></h1>
+            <form action="HelloWorld.jsp">
+            	<input type="submit" value="logout"/>
+        	</form>
         </div>
         <div class="bottom-part">
             <div class="rectangle">
-                <div class="title-container">
-                    <div id="CRTitle" class="CR-Title">Edit/Delete Customer Representatives</div>
-                </div>
-                
-            </div>
+    			<div class="title-container">
+        			<div id="CRTitle" class="CR-Title">Manage Customer Representatives</div>
+    			</div>
+    			<div>
+        			<label for="mode">Select Mode:</label>
+        			<select id="mode" name="mode" onchange="updateForm()">
+            			<option value="add">Add</option>
+            			<option value="edit">Edit</option>
+            			<option value="delete">Delete</option>
+        			</select>
+    			</div>
+    			<div>
+        			<label id="usernameLabel" for="username">Username:</label>
+        			<input type="text" id="username" name="username">
+    			</div>
+    			<div>
+        			<label id="newUsernameLabel" for="newUsername">New Username:</label>
+        			<input type="text" id="newUsername" name="newUsername">
+    			</div>
+    			<div>
+        			<label id="passwordLabel" for="password">Password:</label>
+        			<input type="password" id="password" name="password">
+    			</div>
+    			<div>
+        			<button type="button" class="modal-form-button" onclick="manageCustomerRepresentative()">Submit</button>
+    			</div>
+			</div>
             <div class="rectangle">
                 <div class="title-container">
                     <div id="SRTitle" class="SR-Title">Obtain Sales Report</div>

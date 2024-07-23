@@ -10,15 +10,15 @@
 
 # Credentials
 
-Customer
+## Customer
 Username: CuTest
 Pword: CuPassword
 
-Admin
+## Admin
 Username: AdTest
 Pword: AdPassword
 
-Repersentative: 
+## Repersentative: 
 Username: CRTest
 Pword: CRPassword
 

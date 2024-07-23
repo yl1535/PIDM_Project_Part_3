@@ -4,21 +4,21 @@
 # We need to submit the zip file, do not submit the folder or the war file
 
 # Current work separation plan:
-# Yue Luo, Xanne -- Writing XML
-# Kriti       -- Writing DB SQL
-# Harish    -- Complete checklist, README.md, record demo video
+### Yue Luo, Xanne -- Writing XML
+### Kriti       -- Writing DB SQL
+### Harish    -- Complete checklist, README.md, record demo video
 
 # Credentials
 
-## Customer
+### Customer
 Username: CuTest
 Pword: CuPassword
 
-## Admin
+### Admin
 Username: AdTest
 Pword: AdPassword
 
-## Repersentative: 
+### Repersentative: 
 Username: CRTest
 Pword: CRPassword
 

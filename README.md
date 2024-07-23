@@ -6,7 +6,20 @@
 # Current work separation plan:
 # Yue Luo, Xanne -- Writing XML
 # Kriti       -- Writing DB SQL
-# Harish    -- Complete checklist, README.md, record demo vide
+# Harish    -- Complete checklist, README.md, record demo video
+
+# Credentials
+Customer
+Username: CuTest
+Pword: CuPassword
+
+Admin
+Username: AdTest
+Pword: AdPassword
+
+Repersentative: 
+Username: CRTest
+Pword: CRPassword
 
 # Note1:
 Schedules that are out-of-date will not be deleted from the schedule table,and will not be shown on the Customer Page since customers cannot make reservations on a schedule which occured in the past. Though CRs and Admins may still reach data of those schedules and edit them.

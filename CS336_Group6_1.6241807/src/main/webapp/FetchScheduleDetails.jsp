@@ -46,7 +46,7 @@
             Timestamp arrTime = rs.getTimestamp("Arrtime");
             Timestamp depTime = rs.getTimestamp("Deptime");
             totalStops++;
-            int fare = totalStops == 1 ? 0 : totalFare / totalStops;
+            int fare = totalStops == 1 ? 0 : totalFare / (totalStops-1);
             modalContent.append("<tr>")
                 .append("<td>").append(stationName).append("</td>")
                 .append("<td>").append(arrTime == null ? "X" : arrTime).append("</td>")

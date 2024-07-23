@@ -322,52 +322,22 @@
     	        xhr.send();
     	    }
     	    
-    	    function openReservationModal() {
-
-    	        const content = `
-    	            <form class="modal-form" onsubmit="makeReservation(event)">
-    	                <label for="tripType">Trip Type:</label>
-    	                <select id="tripType" name="tripType" required>
-    	                    <option value="oneway">One-way</option>
-    	                    <option value="roundtrip">Round-trip</option>
-    	                </select>
-    	                <label for="passengerType">Passenger Type:</label>
-    	                <select id="passengerType" name="passengerType" required>
-    	                    <option value="normal">Normal</option>
-    	                    <option value="child">Child</option>
-    	                    <option value="disabled">Disabled</option>
-    	                    <option value="senior">Senior</option>
-    	                </select>
-    	                <button type="submit" class="modal-form-button">Confirm Reservation</button>
-    	            </form>`;
-    	        openModal(content);
-    	    }
-
-    	    function makeReservation(event) {
-    	        event.preventDefault();
-    	        const tripType = document.getElementById('tripType').value;
-    	        const passengerType = document.getElementById('passengerType').value;
-
-    	        const ifRound = tripType === "roundtrip";
-    	        const ifChild = passengerType === "child";
-    	        const ifDisabled = passengerType === "disabled";
-    	        const ifSenior = passengerType === "senior";
-
+    	    function openReservationModal(scheduleTid, trainTid) {
+    	        const modal = document.getElementById('modal');
+    	        const modalContent = document.getElementById('modal-content');
     	        const xhr = new XMLHttpRequest();
-    	        xhr.open("POST", "MakeReservation.jsp", true);
-    	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    	        xhr.open("GET", "OpenReservationModal.jsp?scheduleTid=" + scheduleTid + "&trainTid=" + trainTid, true);
     	        xhr.onreadystatechange = function() {
     	            if (xhr.readyState === 4 && xhr.status === 200) {
-    	                closeModal();
-    	                updateReservationsList();
+    	                modalContent.innerHTML = xhr.responseText;
+    	                modal.style.display = "flex";
     	            }
     	        };
-    	        const params = `ifRound=${ifRound}&ifChild=${ifChild}&ifDisabled=${ifDisabled}&ifSenior=${ifSenior}`;
-    	        xhr.send(params);
+    	        xhr.send();
     	    }
 
     	    function updateReservationsList() {
-    	        const xhr = new XMLHttpRequest();
+    	        var xhr = new XMLHttpRequest();
     	        xhr.open("POST", "FetchReservationsList.jsp", true);
     	        xhr.onreadystatechange = function() {
     	            if (xhr.readyState === 4 && xhr.status === 200) {

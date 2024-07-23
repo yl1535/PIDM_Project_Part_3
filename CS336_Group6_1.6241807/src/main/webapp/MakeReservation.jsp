@@ -3,12 +3,14 @@
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <%@ page import="java.sql.*, java.util.*, java.text.SimpleDateFormat" %>
 <%
+    String tripType = request.getParameter("tripType");
+    String passengerType = request.getParameter("passengerType");
     String scheduleTid = (String) session.getAttribute("scheduleTid");
     String trainTid = (String) session.getAttribute("trainTid");
-    boolean ifRound = Boolean.parseBoolean(request.getParameter("ifRound"));
-    boolean ifChild = Boolean.parseBoolean(request.getParameter("ifChild"));
-    boolean ifDisabled = Boolean.parseBoolean(request.getParameter("ifDisabled"));
-    boolean ifSenior = Boolean.parseBoolean(request.getParameter("ifSenior"));
+    boolean ifRound = tripType.equals("roundtrip");
+    boolean ifChild = passengerType.equals("child");
+    boolean ifDisabled = passengerType.equals("disabled");
+    boolean ifSenior = passengerType.equals("senior");
 
     String usr = (String) session.getAttribute("Username");
 
@@ -41,4 +43,11 @@
         try { if (pstm != null) pstm.close(); } catch (Exception e) { e.printStackTrace(); }
         try { if (con != null) con.close(); } catch (Exception e) { e.printStackTrace(); }
     }
+    
 %>
+<script>
+	window.location.href = 'Customer.jsp';
+    closeModal();
+    updateReservationsList();
+</script>
+

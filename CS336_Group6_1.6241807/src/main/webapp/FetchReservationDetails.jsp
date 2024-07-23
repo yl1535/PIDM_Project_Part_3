@@ -14,7 +14,7 @@
     try {
         con = db.getConnection();
 
-        String resDetailsSQL = "SELECT R.ReservateDate, R.TrainTid, R.ScheduleTid, TS.TotalFare, TS.Linename, " +
+        String resDetailsSQL = "SELECT R.ReservateDate, R.TrainTid, R.ScheduleTid, R.IfChild, R.IfSenior, R.IfDisabled, R.IfRound, TS.TotalFare, TS.Linename, " +
                                "(SELECT Deptime FROM Stops WHERE TrainTid = R.TrainTid AND ScheduleTid = R.ScheduleTid AND Arrtime IS NULL) AS StartTime, " +
                                "(SELECT Arrtime FROM Stops WHERE TrainTid = R.TrainTid AND ScheduleTid = R.ScheduleTid AND Deptime IS NULL) AS EndTime " +
                                "FROM Reservations R " +
@@ -33,8 +33,17 @@
             Timestamp startTime = rs.getTimestamp("StartTime");
             Timestamp endTime = rs.getTimestamp("EndTime");
             String Linename = rs.getString("Linename");
+            boolean IfChild = rs.getBoolean("IfChild");
+            boolean IfSenior = rs.getBoolean("IfSenior");
+            boolean IfDisabled = rs.getBoolean("IfDisabled");
+            boolean IfRound = rs.getBoolean("IfRound");
 
             boolean ifNotHistory = LocalDateTime.now().isBefore(startTime.toLocalDateTime());
+            
+            if(IfChild) totalFare*=0.75;
+            if(IfSenior) totalFare*=0.65;
+            if(IfDisabled) totalFare*=0.5;
+            if(IfRound) totalFare*=2;
 
             StringBuilder modalContent = new StringBuilder();
             modalContent.append("<div style='text-align: center;'>");

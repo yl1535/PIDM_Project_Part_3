@@ -1,7 +1,6 @@
 # PIDM_Project_Part_3
 
-# Please do not use PIDM_Project_Part_3 as parent folder to run in eclipse! Use CS336_Group6_1.6241807 instead, or just import the war file
-# We need to submit the zip file, do not submit the folder or the war file
+* Please do not use PIDM_Project_Part_3 as parent folder to run in eclipse! Use CS336_Group6_1.6241807 instead, or just import the war file
 
 # Current work separation plan:
 ### Yue Luo, Xanne -- Writing XML

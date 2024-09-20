@@ -1,11 +1,11 @@
 # PIDM_Project_Part_3
 
-* Please do not use PIDM_Project_Part_3 as parent folder to run in eclipse! Use CS336_Group6_1.6241807 instead, or just import the war file
+# Please do not use PIDM_Project_Part_3 as parent folder to run in eclipse! Use CS336_Group6_1.6241807 instead, or just import the war file
 
 # Current work separation plan:
-### Yue Luo, Xanne -- Writing XML
-### Kriti       -- Writing DB SQL
-### Harish    -- Complete checklist, README.md, record demo video
+* Yue Luo, Xanne -- Writing XML
+* Kriti       -- Writing DB SQL
+* Harish    -- Complete checklist, README.md, record demo video
 
 # Credentials
 
